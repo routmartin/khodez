@@ -1,218 +1,242 @@
-import React, { useState, useRef, useEffect } from "react";
-import { MessageSquare, X, Send, User, Sparkles, Loader2, ArrowRight } from "lucide-react";
-import { Message } from "../types";
+import { defineComponent, nextTick, ref, watch } from "vue";
+import { Loader2, MessageSquare, Send, Sparkles, User, X } from "lucide-vue-next";
+import type { Message } from "../types";
 
-export function AIChatBot() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "assistant",
-      content: "Hello! I am A. Chen's digital twin, trained on my actual portfolio data and engineering experience. Ask me anything about my work in full-stack, systems architecture, or mobile applications!",
-      timestamp: new Date()
-    }
-  ]);
-  const [input, setInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+export const AIChatBot = defineComponent({
+  name: "AIChatBot",
+  setup() {
+    const isOpen = ref(false);
+    const messages = ref<Message[]>([
+      {
+        role: "assistant",
+        content:
+          "Hello! I am A. Chen's digital twin, trained on my actual portfolio data and engineering experience. Ask me anything about my work in full-stack, systems architecture, or mobile applications!",
+        timestamp: new Date(),
+      },
+    ]);
+    const input = ref("");
+    const isLoading = ref(false);
+    const messagesEndRef = ref<HTMLDivElement | null>(null);
 
-  // Suggested prompt questions
-  const suggestions = [
-    "Are you available for contract roles?",
-    "Tell me about the QuantumFin project.",
-    "Explain your Clean Architecture implementation.",
-    "What is your tech stack for scalable backends?"
-  ];
+    const suggestions = [
+      "Are you available for contract roles?",
+      "Tell me about the QuantumFin project.",
+      "Explain your Clean Architecture implementation.",
+      "What is your tech stack for scalable backends?",
+    ];
 
-  // Auto-scroll to bottom of conversation
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isOpen]);
+    watch(
+      () => [messages.value.length, isOpen.value],
+      async () => {
+        await nextTick();
+        messagesEndRef.value?.scrollIntoView({ behavior: "smooth" });
+      }
+    );
 
-  const handleSendMessage = async (text: string) => {
-    if (!text.trim() || isLoading) return;
+    const handleSendMessage = async (text: string) => {
+      if (!text.trim() || isLoading.value) return;
 
-    const userMsg: Message = {
-      role: "user",
-      content: text,
-      timestamp: new Date()
+      const userMessage: Message = {
+        role: "user",
+        content: text,
+        timestamp: new Date(),
+      };
+
+      const requestMessages = [...messages.value, userMessage];
+      messages.value = requestMessages;
+      input.value = "";
+      isLoading.value = true;
+
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            messages: requestMessages.map((message) => ({
+              role: message.role,
+              content: message.content,
+            })),
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Chat routing request failed");
+        }
+
+        const data = await response.json();
+        messages.value = [
+          ...messages.value,
+          {
+            role: "assistant",
+            content:
+              data.response ||
+              "I didn't receive a response from my server module. Let's try again in a bit!",
+            timestamp: new Date(),
+          },
+        ];
+      } catch (error) {
+        console.error(error);
+        messages.value = [
+          ...messages.value,
+          {
+            role: "assistant",
+            content:
+              "I encountered a minor network disruption connecting to my Express backend. Please verify your internet connection or reload the applet!",
+            timestamp: new Date(),
+          },
+        ];
+      } finally {
+        isLoading.value = false;
+      }
     };
 
-    setMessages((prev) => [...prev, userMsg]);
-    setInput("");
-    setIsLoading(true);
-
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content }))
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error("Chat routing request failed");
-      }
-
-      const data = await response.json();
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: data.response || "I didn't receive a response from my server module. Let's try again in a bit!",
-          timestamp: new Date()
-        }
-      ]);
-    } catch (err) {
-      console.error(err);
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: "I encountered a minor network disruption connecting to my Express backend. Please verify your internet connection or reload the applet!",
-          timestamp: new Date()
-        }
-      ]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  return (
-    <>
-      {/* 1. Pulse Floating Trigger Button */}
+    return () => [
       <button
         id="ai-assistant-toggle-btn"
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-gradient-to-r from-teal-500 via-indigo-600 to-brand-tertiary text-white shadow-[0_0_30px_rgba(99,102,241,0.4)] hover:shadow-[0_0_40px_rgba(99,102,241,0.6)] hover:scale-105 active:scale-95 transition-all duration-300 group flex items-center gap-2 cursor-pointer"
+        onClick={() => {
+          isOpen.value = !isOpen.value;
+        }}
+        class="fixed bottom-6 right-6 z-50 flex cursor-pointer items-center gap-2 rounded-full bg-gradient-to-r from-teal-500 via-indigo-600 to-brand-tertiary p-4 text-white shadow-[0_0_30px_rgba(99,102,241,0.4)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(99,102,241,0.6)] active:scale-95 group"
         aria-label="Toggle AI Assist Assistant"
       >
-        <div className="relative">
-          <MessageSquare className="w-5.5 h-4.5" />
-          <span className="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 bg-green-400 border-2 border-brand-bg rounded-full animate-ping"></span>
-          <span className="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 bg-green-400 border-2 border-brand-bg rounded-full"></span>
+        <div class="relative">
+          <MessageSquare class="h-4.5 w-5.5" />
+          <span class="absolute -right-1.5 -top-1.5 h-2.5 w-2.5 animate-ping rounded-full border-2 border-brand-bg bg-green-400"></span>
+          <span class="absolute -right-1.5 -top-1.5 h-2.5 w-2.5 rounded-full border-2 border-brand-bg bg-green-400"></span>
         </div>
-        <span className="text-xs font-semibold max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 whitespace-nowrap">
+        <span class="max-w-0 overflow-hidden whitespace-nowrap text-xs font-semibold transition-all duration-500 group-hover:max-w-xs">
           Interactive AI Assist
         </span>
-      </button>
-
-      {/* 2. Slide Drawer / Chat Frame */}
-      {isOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end pointer-events-none">
-          {/* Backdrop Blur overlay for screen */}
-          <div 
-            className="absolute inset-0 bg-black/45 backdrop-filter backdrop-blur-sm pointer-events-auto"
-            onClick={() => setIsOpen(false)}
+      </button>,
+      isOpen.value ? (
+        <div class="fixed inset-0 z-50 flex justify-end pointer-events-none">
+          <div
+            class="theme-chat-backdrop absolute inset-0 pointer-events-auto backdrop-filter backdrop-blur-sm"
+            onClick={() => {
+              isOpen.value = false;
+            }}
           ></div>
 
-          {/* Drawer Body Container */}
-          <div className="w-full max-w-md h-full bg-brand-surface/95 border-l border-white/10 shadow-2xl relative flex flex-col justify-between pointer-events-auto z-10 overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-[4px] bg-gradient-to-r from-teal-500 via-indigo-500 to-indigo-800"></div>
+          <div class="relative z-10 flex h-full w-full max-w-md flex-col justify-between overflow-hidden border-l border-white/10 bg-brand-surface/95 shadow-2xl pointer-events-auto">
+            <div class="absolute left-0 top-0 h-[4px] w-full bg-gradient-to-r from-teal-500 via-indigo-500 to-indigo-800"></div>
 
-            {/* Header section */}
-            <div className="p-4 border-b border-white/5 flex items-center justify-between bg-black/20">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 relative">
-                  <Sparkles className="w-5 h-5 animate-pulse" />
+            <div class="theme-chat-chrome flex items-center justify-between border-b border-white/5 p-4">
+              <div class="flex items-center gap-3">
+                <div class="relative flex h-10 w-10 items-center justify-center rounded-full border border-indigo-500/20 bg-indigo-500/10 text-indigo-400">
+                  <Sparkles class="h-5 w-5 animate-pulse" />
                 </div>
-                <div className="text-left">
-                  <h4 className="text-sm font-bold text-white flex items-center gap-1.5">
-                    A. Chen Digital Twin
-                  </h4>
-                  <span className="text-[10px] font-mono text-green-400 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
+                <div class="text-left">
+                  <h4 class="flex items-center gap-1.5 text-sm font-bold text-white">A. Chen Digital Twin</h4>
+                  <span class="flex items-center gap-1 font-mono text-[10px] text-green-400">
+                    <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-green-400"></span>
                     Gemini 3.5 Flash Model
                   </span>
                 </div>
               </div>
-              <button 
-                onClick={() => setIsOpen(false)}
-                className="p-1.5 rounded-lg text-white/50 hover:bg-white/5 hover:text-white transition-colors"
+              <button
+                onClick={() => {
+                  isOpen.value = false;
+                }}
+                class="rounded-lg p-1.5 text-white/50 transition-colors hover:bg-white/5 hover:text-white"
               >
-                <X className="w-5 h-5" />
+                <X class="h-5 w-5" />
               </button>
             </div>
 
-            {/* Message Stream */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {messages.map((m, idx) => (
-                <div 
-                  key={idx} 
-                  className={`flex gap-3 max-w-[85%] ${m.role === "user" ? "ml-auto flex-row-reverse" : "mr-auto"}`}
+            <div class="flex-1 space-y-4 overflow-y-auto p-4">
+              {messages.value.map((message, index) => (
+                <div
+                  key={index}
+                  class={`flex max-w-[85%] gap-3 ${
+                    message.role === "user" ? "ml-auto flex-row-reverse" : "mr-auto"
+                  }`}
                 >
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${m.role === "user" ? "bg-cyan-500/10 text-cyan-400" : "bg-indigo-500/10 text-indigo-400"}`}>
-                    {m.role === "user" ? <User className="w-4 h-4" /> : <Sparkles className="w-4 h-4" />}
+                  <div
+                    class={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
+                      message.role === "user"
+                        ? "bg-cyan-500/10 text-cyan-400"
+                        : "bg-indigo-500/10 text-indigo-400"
+                    }`}
+                  >
+                    {message.role === "user" ? <User class="h-4 w-4" /> : <Sparkles class="h-4 w-4" />}
                   </div>
                   <div>
-                    <div className={`rounded-2xl p-3 text-xs leading-relaxed text-left ${m.role === "user" ? "bg-indigo-600 text-white" : "bg-white/5 border border-white/5 text-white/90"}`}>
-                      {m.content}
+                    <div
+                      class={`rounded-2xl p-3 text-left text-xs leading-relaxed ${
+                        message.role === "user"
+                          ? "bg-indigo-600 text-white"
+                          : "border border-white/5 bg-white/5 text-white/90"
+                      }`}
+                    >
+                      {message.content}
                     </div>
-                    <span className="text-[8px] font-mono text-white/30 mt-1 block px-1 text-left">
-                      {m.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    <span class="mt-1 block px-1 text-left font-mono text-[8px] text-white/30">
+                      {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     </span>
                   </div>
                 </div>
               ))}
-              {isLoading && (
-                <div className="flex gap-3 max-w-[85%] mr-auto items-center">
-                  <div className="w-8 h-8 rounded-full bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
-                    <Loader2 className="w-4 h-4 animate-spin" />
+
+              {isLoading.value ? (
+                <div class="mr-auto flex max-w-[85%] items-center gap-3">
+                  <div class="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500/10 text-indigo-400">
+                    <Loader2 class="h-4 w-4 animate-spin" />
                   </div>
-                  <div className="rounded-2xl p-3 bg-white/5 border border-white/5 text-xs text-white/50 italic">
+                  <div class="rounded-2xl border border-white/5 bg-white/5 p-3 text-xs italic text-white/50">
                     Formulating response...
                   </div>
                 </div>
-              )}
-              <div ref={messagesEndRef} />
+              ) : null}
+
+              <div ref={messagesEndRef}></div>
             </div>
 
-            {/* Suggested Chip list inside foot */}
-            <div className="p-4 border-t border-white/5 bg-black/10">
-              {messages.length === 1 && (
-                <div className="mb-3">
-                  <p className="text-[10px] font-mono text-white/40 mb-1.5 uppercase text-left">Suggested inquiries:</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {suggestions.map((s, idx) => (
+            <div class="theme-chat-chrome border-t border-white/5 p-4">
+              {messages.value.length === 1 ? (
+                <div class="mb-3">
+                  <p class="mb-1.5 text-left font-mono text-[10px] uppercase text-white/40">Suggested inquiries:</p>
+                  <div class="flex flex-wrap gap-1.5">
+                    {suggestions.map((suggestion) => (
                       <button
-                        key={idx}
-                        onClick={() => handleSendMessage(s)}
-                        className="text-[11px] bg-white/5 hover:bg-indigo-600/20 hover:border-indigo-500/30 border border-white/10 text-white/80 rounded-full px-2.5 py-1 text-left transition-all active:scale-95 whitespace-nowrap overflow-hidden text-ellipsis max-w-full cursor-pointer"
+                        key={suggestion}
+                        onClick={() => void handleSendMessage(suggestion)}
+                        class="max-w-full cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-left text-[11px] text-white/80 transition-all hover:border-indigo-500/30 hover:bg-indigo-600/20 active:scale-95"
                       >
-                        {s}
+                        {suggestion}
                       </button>
                     ))}
                   </div>
                 </div>
-              )}
+              ) : null}
 
-              {/* Chat send box */}
-              <form 
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleSendMessage(input);
+              <form
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  void handleSendMessage(input.value);
                 }}
-                className="flex gap-2"
+                class="flex gap-2"
               >
                 <input
                   type="text"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
+                  value={input.value}
+                  onInput={(event) => {
+                    input.value = (event.target as HTMLInputElement).value;
+                  }}
                   placeholder="Ask digital companion A. Chen..."
-                  className="flex-1 h-9 rounded-lg bg-[#0a0d11] border border-white/10 p-3 text-xs text-white placeholder-white/30 focus:outline-none focus:border-indigo-400"
+                  class="theme-input-surface h-9 flex-1 rounded-lg border p-3 text-xs placeholder-white/30 focus:border-indigo-400 focus:outline-none"
                 />
                 <button
                   type="submit"
-                  disabled={!input.trim() || isLoading}
-                  className="w-9 h-9 rounded-lg bg-indigo-600 text-white flex items-center justify-center hover:bg-indigo-500 active:scale-95 disabled:opacity-40 disabled:scale-100 transition-all cursor-pointer"
+                  disabled={!input.value.trim() || isLoading.value}
+                  class="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600 text-white transition-all hover:bg-indigo-500 active:scale-95 disabled:scale-100 disabled:opacity-40"
                 >
-                  <Send className="w-4 h-4" />
+                  <Send class="h-4 w-4" />
                 </button>
               </form>
             </div>
           </div>
         </div>
-      )}
-    </>
-  );
-}
+      ) : null,
+    ];
+  },
+});

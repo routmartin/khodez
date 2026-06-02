@@ -1,237 +1,219 @@
-import React, { useState, useEffect } from "react";
-import { CreditCard, TrendingUp, Send, CheckCircle2, Shield, Lock, Eye, AlertCircle, RefreshCw, BarChart2, DollarSign } from "lucide-react";
+import { defineComponent, onBeforeUnmount, onMounted, PropType, ref } from "vue";
+import { BarChart2, CheckCircle2, CreditCard, Lock, Send } from "lucide-vue-next";
 
-interface MockupProps {
-  type: "fintech" | "chat" | "trade";
-}
+const FintechMockup = defineComponent({
+  name: "FintechMockup",
+  setup() {
+    const balance = ref(48250.75);
+    let intervalId: number | undefined;
 
-export function ProjectMockups({ type }: MockupProps) {
-  if (type === "fintech") {
-    return <FintechMockup />;
-  }
-  if (type === "chat") {
-    return <ChatMockup />;
-  }
-  return <TradeMockup />;
-}
+    onMounted(() => {
+      intervalId = window.setInterval(() => {
+        balance.value += (Math.random() - 0.45) * 5;
+      }, 4000);
+    });
 
-// 1. QuantumFin Mockup (Fintech)
-function FintechMockup() {
-  const [balance, setBalance] = useState(48250.75);
+    onBeforeUnmount(() => {
+      if (intervalId) {
+        window.clearInterval(intervalId);
+      }
+    });
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setBalance((prev) => prev + (Math.random() - 0.45) * 5);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="w-[240px] h-[340px] rounded-[32px] bg-[#0d0f14] border-4 border-white/5 relative p-4 flex flex-col justify-between overflow-hidden shadow-2xl shrink-0 mx-auto select-none">
-      <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-teal-500 to-sky-500"></div>
-
-      {/* Top Bar info */}
-      <div className="flex justify-between items-center pb-2 border-b border-white/5">
-        <span className="text-[9px] font-mono text-cyan-400 font-semibold tracking-wider">QUANTUM.FIN</span>
-        <span className="text-[8px] font-mono text-white/40">v2.1.0</span>
-      </div>
-
-      {/* Credit Card Graphic */}
-      <div className="bg-gradient-to-br from-indigo-600 to-indigo-900 rounded-xl p-3 text-left relative overflow-hidden shadow-lg mt-2">
-        <div className="absolute right-2 bottom-2 font-mono text-white/10 text-3xl font-black italic">VISA</div>
-        <div className="flex justify-between items-start">
-          <CreditCard className="w-6 h-6 text-indigo-200" />
-          <span className="text-[7px] text-indigo-300 font-mono tracking-widest">PREMIUM CHEN</span>
+    return () => (
+      <div class="theme-mockup-shell-alt relative mx-auto flex h-[340px] w-[240px] shrink-0 flex-col justify-between overflow-hidden rounded-[32px] border-4 border-white/5 p-4 select-none">
+        <div class="absolute left-0 top-0 h-[2px] w-full bg-gradient-to-r from-teal-500 to-sky-500"></div>
+        <div class="flex items-center justify-between border-b border-white/5 pb-2">
+          <span class="font-mono text-[9px] font-semibold tracking-wider text-cyan-400">QUANTUM.FIN</span>
+          <span class="font-mono text-[8px] text-white/40">v2.1.0</span>
         </div>
-        <div className="mt-4">
-          <span className="text-[7px] block uppercase text-indigo-300 tracking-wider">Primary Account</span>
-          <span className="text-sm font-semibold text-white font-mono tracking-wider">•••• •••• •••• 5678</span>
-        </div>
-      </div>
-
-      {/* Balance Statement */}
-      <div className="text-left mt-3">
-        <span className="text-[8px] font-mono text-white/40 uppercase">Total Net Worth</span>
-        <div className="flex items-baseline gap-1 mt-0.5">
-          <span className="text-lg font-bold font-mono tracking-tight text-white">${balance.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-          <span className="text-[8px] text-green-400 font-medium font-mono">+12.4%</span>
-        </div>
-      </div>
-
-      {/* Action / Transaction Simulator */}
-      <div className="bg-white/5 rounded-xl p-2.5 flex-1 mt-3 flex flex-col justify-center gap-1.5 border border-white/5 text-left">
-        <span className="text-[8px] font-mono text-white/30 uppercase">Immediate Settlement Queue</span>
-        
-        {/* Transaction 1 */}
-        <div className="flex items-center justify-between text-[9px] bg-white/5 p-1 px-1.5 rounded-lg">
-          <div className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
-            <span className="font-medium text-white/80">USD to KHR Routing</span>
+        <div class="relative mt-2 overflow-hidden rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-900 p-3 text-left shadow-lg">
+          <div class="absolute bottom-2 right-2 font-mono text-3xl font-black italic text-white/10">VISA</div>
+          <div class="flex items-start justify-between">
+            <CreditCard class="h-6 w-6 text-indigo-200" />
+            <span class="font-mono text-[7px] tracking-widest text-indigo-300">PREMIUM CHEN</span>
           </div>
-          <span className="font-mono text-green-400">+$2,450.00</span>
-        </div>
-
-        {/* Transaction 2 */}
-        <div className="flex items-center justify-between text-[9px] bg-white/5 p-1 px-1.5 rounded-lg">
-          <div className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
-            <span className="font-medium text-white/80">Biometric Verification</span>
+          <div class="mt-4">
+            <span class="block text-[7px] uppercase tracking-wider text-indigo-300">Primary Account</span>
+            <span class="font-mono text-sm font-semibold tracking-wider text-white">•••• •••• •••• 5678</span>
           </div>
-          <span className="font-semibold text-cyan-400">PASSED</span>
+        </div>
+        <div class="mt-3 text-left">
+          <span class="font-mono text-[8px] uppercase text-white/40">Total Net Worth</span>
+          <div class="mt-0.5 flex items-baseline gap-1">
+            <span class="font-mono text-lg font-bold tracking-tight text-white">
+              ${balance.value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </span>
+            <span class="font-mono text-[8px] font-medium text-green-400">+12.4%</span>
+          </div>
+        </div>
+        <div class="mt-3 flex flex-1 flex-col justify-center gap-1.5 rounded-xl border border-white/5 bg-white/5 p-2.5 text-left">
+          <span class="font-mono text-[8px] uppercase text-white/30">Immediate Settlement Queue</span>
+          <div class="flex items-center justify-between rounded-lg bg-white/5 p-1 px-1.5 text-[9px]">
+            <div class="flex items-center gap-1.5">
+              <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-green-400"></span>
+              <span class="font-medium text-white/80">USD to KHR Routing</span>
+            </div>
+            <span class="font-mono text-green-400">+$2,450.00</span>
+          </div>
+          <div class="flex items-center justify-between rounded-lg bg-white/5 p-1 px-1.5 text-[9px]">
+            <div class="flex items-center gap-1.5">
+              <span class="h-1.5 w-1.5 rounded-full bg-cyan-400"></span>
+              <span class="font-medium text-white/80">Biometric Verification</span>
+            </div>
+            <span class="font-semibold text-cyan-400">PASSED</span>
+          </div>
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  },
+});
 
-// 2. EchoConnect Mockup (Chat / WebSockets)
-function ChatMockup() {
-  const [dots, setDots] = useState("• • •");
+const ChatMockup = defineComponent({
+  name: "ChatMockup",
+  setup() {
+    const dots = ref("• • •");
+    let intervalId: number | undefined;
 
-  useEffect(() => {
-    const sequence = ["•", "• •", "• • •", ""];
-    let i = 0;
-    const interval = setInterval(() => {
-      setDots(sequence[i % sequence.length]);
-      i++;
-    }, 1200);
-    return () => clearInterval(interval);
-  }, []);
+    onMounted(() => {
+      const sequence = ["•", "• •", "• • •", ""];
+      let index = 0;
+      intervalId = window.setInterval(() => {
+        dots.value = sequence[index % sequence.length];
+        index += 1;
+      }, 1200);
+    });
 
-  return (
-    <div className="w-[320px] h-[220px] rounded-2xl bg-[#090b0e] border border-white/10 relative p-4 flex flex-col justify-between overflow-hidden shadow-2xl mx-auto text-left select-none">
-      {/* Encryption Header Indicator */}
-      <div className="flex items-center justify-between border-b border-white/5 pb-2">
-        <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full bg-[#3b82f6]/20 flex items-center justify-center">
-            <Lock className="w-3 h-3 text-[#3b82f6]" />
+    onBeforeUnmount(() => {
+      if (intervalId) {
+        window.clearInterval(intervalId);
+      }
+    });
+
+    return () => (
+      <div class="theme-mockup-shell relative mx-auto flex h-[220px] w-[320px] flex-col justify-between overflow-hidden rounded-2xl border border-white/10 p-4 text-left select-none">
+        <div class="flex items-center justify-between border-b border-white/5 pb-2">
+          <div class="flex items-center gap-1.5">
+            <div class="flex h-2.5 w-2.5 items-center justify-center rounded-full bg-[#3b82f6]/20">
+              <Lock class="h-3 w-3 text-[#3b82f6]" />
+            </div>
+            <span class="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#3b82f6]">AES-256 E2EE Enabled</span>
           </div>
-          <span className="text-[10px] font-mono text-[#3b82f6] uppercase tracking-wider font-semibold">AES-256 E2EE Enabled</span>
+          <div class="flex items-center gap-1">
+            <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400"></span>
+            <span class="font-mono text-[8px] text-white/40">1.2k connected</span>
+          </div>
         </div>
-        <div className="flex items-center gap-1">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span className="text-[8px] font-mono text-white/40">1.2k connected</span>
+        <div class="my-3 flex flex-1 flex-col justify-end gap-2 pr-1 font-sans">
+          <div class="relative max-w-[80%] self-start rounded-[12px] border border-white/5 bg-white/5 p-2 text-left">
+            <span class="absolute -top-3.5 left-1 font-mono text-[8px] text-white/40">Peer #4102</span>
+            <p class="text-[10px] leading-snug text-white/80">Client socket dispatch initiated. Testing load threshold.</p>
+          </div>
+          <div class="relative max-w-[80%] self-end rounded-[12px] border border-indigo-500/20 bg-indigo-500/15 p-2 text-left">
+            <span class="absolute -top-3.5 right-1 font-mono text-[8px] text-indigo-400">Server Node</span>
+            <p class="text-[10px] leading-snug text-indigo-200">ACK received. Concurrency stable under 3.5ms delay.</p>
+          </div>
+          <div class="ml-1 mt-1 flex items-center gap-1 self-start font-mono text-[9px] text-white/30">
+            <span>Active Tunnel Routing</span>
+            <span class="min-w-[20px] font-bold text-cyan-400">{dots.value}</span>
+          </div>
+        </div>
+        <div class="mt-1 flex items-center gap-1.5 border-t border-white/5 pt-2">
+          <div class="flex h-7 flex-1 items-center rounded-full border border-white/5 bg-white/5 px-3 text-[9px] text-white/40">
+            Secure Payload Tunneling ...
+          </div>
+          <button class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-600 transition-colors hover:bg-indigo-500">
+            <Send class="h-3.5 w-3.5 text-white" />
+          </button>
         </div>
       </div>
+    );
+  },
+});
 
-      {/* Message Stream layout */}
-      <div className="flex-1 my-3 flex flex-col justify-end gap-2 pr-1 font-sans">
-        {/* Msg 1 (Left) */}
-        <div className="max-w-[80%] rounded-[12px] bg-white/5 border border-white/5 p-2 text-left self-start relative">
-          <span className="absolute -top-3.5 left-1 text-[8px] font-mono text-white/40">Peer #4102</span>
-          <p className="text-[10px] text-white/80 leading-snug">Client socket dispatch initiated. Testing load threshold.</p>
+const TradeMockup = defineComponent({
+  name: "TradeMockup",
+  setup() {
+    return () => (
+      <div class="theme-mockup-shell relative mx-auto flex h-[220px] w-[320px] flex-col justify-between overflow-hidden rounded-2xl border border-white/10 p-4 text-left select-none">
+        <div class="flex items-center justify-between border-b border-white/5 pb-2">
+          <div class="flex items-center gap-1">
+            <BarChart2 class="h-4 w-4 text-emerald-400" />
+            <span class="font-mono text-[9px] font-bold tracking-wider text-white/80">APX_MATCH_ENGINE</span>
+          </div>
+          <div class="flex items-center gap-2 font-mono text-[9px]">
+            <span class="text-white/40">Index:</span>
+            <span class="font-semibold text-emerald-400">$1,489.20</span>
+          </div>
         </div>
-
-        {/* Msg 2 (Right) */}
-        <div className="max-w-[80%] rounded-[12px] bg-indigo-500/15 border border-indigo-500/20 p-2 text-left self-end relative">
-          <span className="absolute -top-3.5 right-1 text-[8px] font-mono text-indigo-400">Server Node</span>
-          <p className="text-[10px] text-indigo-200 leading-snug">ACK received. Concurrency stable under 3.5ms delay.</p>
+        <div class="relative my-3 flex flex-1 items-center justify-between gap-2.5 px-2">
+          <div class="pointer-events-none absolute inset-0 flex flex-col justify-between py-1 opacity-20">
+            <div class="h-[1px] w-full border-b border-white/10"></div>
+            <div class="h-[1px] w-full border-b border-white/10"></div>
+            <div class="h-[1px] w-full border-b border-white/10"></div>
+            <div class="h-[1px] w-full border-b border-white/10"></div>
+          </div>
+          <div class="flex h-24 flex-1 flex-col items-center justify-center">
+            <div class="relative flex h-20 w-[1px] items-center justify-center bg-red-500">
+              <div class="absolute h-10 w-2 rounded bg-red-600"></div>
+            </div>
+            <span class="mt-1 font-mono text-[6px] text-white/30">09:41</span>
+          </div>
+          <div class="flex h-24 flex-1 flex-col items-center justify-center">
+            <div class="relative flex h-20 w-[1px] items-center justify-center bg-emerald-500">
+              <div class="absolute h-14 w-2 rounded bg-emerald-500"></div>
+            </div>
+            <span class="mt-1 font-mono text-[6px] text-white/30">09:42</span>
+          </div>
+          <div class="flex h-24 flex-1 flex-col items-center justify-center">
+            <div class="relative flex h-20 w-[1px] items-center justify-center bg-emerald-500">
+              <div class="absolute h-8 w-2 rounded bg-emerald-400"></div>
+            </div>
+            <span class="mt-1 font-mono text-[6px] text-white/30">09:43</span>
+          </div>
+          <div class="flex h-24 flex-1 flex-col items-center justify-center">
+            <div class="relative flex h-20 w-[1px] items-center justify-center bg-red-500">
+              <div class="absolute h-12 w-2 rounded bg-red-500"></div>
+            </div>
+            <span class="mt-1 font-mono text-[6px] text-white/30">09:44</span>
+          </div>
+          <div class="flex h-24 flex-1 flex-col items-center justify-center">
+            <div class="relative flex h-20 w-[1px] items-center justify-center bg-emerald-500">
+              <div class="absolute h-16 w-2 rounded bg-emerald-500"></div>
+            </div>
+            <span class="mt-1 font-mono text-[6px] text-white/30">09:45</span>
+          </div>
         </div>
-
-        {/* Typing indicator */}
-        <div className="flex items-center gap-1 self-start ml-1 mt-1 text-[9px] text-white/30 font-mono">
-          <span>Active Tunnel Routing</span>
-          <span className="text-cyan-400 font-bold min-w-[20px]">{dots}</span>
+        <div class="flex items-center justify-between rounded-xl border border-white/5 bg-white/5 p-1.5 font-mono text-[8px] leading-none">
+          <div class="flex items-center gap-1 text-white/50">
+            <CheckCircle2 class="h-3 w-3 text-green-400" />
+            <span>Active matching stream</span>
+          </div>
+          <span class="font-bold tracking-tight text-cyan-400">LATENCY: 18μs</span>
         </div>
       </div>
+    );
+  },
+});
 
-      {/* Simulated text input row */}
-      <div className="flex gap-1.5 mt-1 pt-2 border-t border-white/5 items-center">
-        <div className="flex-1 bg-white/5 border border-white/5 rounded-full h-7 px-3 flex items-center text-[9px] text-white/40">
-          Secure Payload Tunneling ...
-        </div>
-        <button className="w-7 h-7 bg-indigo-600 rounded-full flex items-center justify-center hover:bg-indigo-500 transition-colors shrink-0">
-          <Send className="w-3.5 h-3.5 text-white" />
-        </button>
-      </div>
-    </div>
-  );
-}
+export const ProjectMockups = defineComponent({
+  name: "ProjectMockups",
+  props: {
+    type: {
+      type: String as PropType<"fintech" | "chat" | "trade">,
+      required: true,
+    },
+  },
+  setup(props) {
+    return () => {
+      if (props.type === "fintech") {
+        return <FintechMockup />;
+      }
 
-// 3. ApexTrade Mockup (Stock Exchange charts)
-function TradeMockup() {
-  const [tick, setTick] = useState(0);
+      if (props.type === "chat") {
+        return <ChatMockup />;
+      }
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTick((prev) => (prev + 1) % 4);
-    }, 2800);
-    return () => clearInterval(timer);
-  }, []);
-
-  return (
-    <div className="w-[320px] h-[220px] rounded-2xl bg-[#0a0d11] border border-white/10 relative p-4 flex flex-col justify-between overflow-hidden shadow-2xl mx-auto text-left select-none">
-      {/* Header with quick stats */}
-      <div className="flex justify-between items-center border-b border-white/5 pb-2">
-        <div className="flex items-center gap-1">
-          <BarChart2 className="w-4 h-4 text-emerald-400" />
-          <span className="text-[9px] font-mono text-white/80 font-bold tracking-wider">APX_MATCH_ENGINE</span>
-        </div>
-        <div className="flex items-center gap-2 font-mono text-[9px]">
-          <span className="text-white/40">Index:</span>
-          <span className="text-emerald-400 font-semibold">$1,489.20</span>
-        </div>
-      </div>
-
-      {/* Candlestick visual mockup using colored items */}
-      <div className="flex-1 flex items-center justify-between gap-2.5 px-2 relative my-3">
-        {/* Background Gridlines */}
-        <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20 py-1">
-          <div className="border-b border-white/10 w-full h-[1px]"></div>
-          <div className="border-b border-white/10 w-full h-[1px]"></div>
-          <div className="border-b border-white/10 w-full h-[1px]"></div>
-          <div className="border-b border-white/10 w-full h-[1px]"></div>
-        </div>
-
-        {/* Candlestick 1 */}
-        <div className="flex flex-col items-center flex-1 h-24 justify-center">
-          <div className="w-[1px] h-20 bg-red-500 relative flex justify-center items-center">
-            <div className="absolute w-2 h-10 bg-red-600 rounded"></div>
-          </div>
-          <span className="text-[6px] font-mono text-white/30 mt-1">09:41</span>
-        </div>
-
-        {/* Candlestick 2 */}
-        <div className="flex flex-col items-center flex-1 h-24 justify-center">
-          <div className="w-[1px] h-20 bg-emerald-500 relative flex justify-center items-center">
-            <div className="absolute w-2 h-14 bg-emerald-500 rounded"></div>
-          </div>
-          <span className="text-[6px] font-mono text-white/30 mt-1">09:42</span>
-        </div>
-
-        {/* Candlestick 3 */}
-        <div className="flex flex-col items-center flex-1 h-24 justify-center">
-          <div className="w-[1px] h-20 bg-emerald-500 relative flex justify-center items-center">
-            <div className="absolute w-2 h-8 bg-emerald-400 rounded"></div>
-          </div>
-          <span className="text-[6px] font-mono text-white/30 mt-1">09:43</span>
-        </div>
-
-        {/* Candlestick 4 */}
-        <div className="flex flex-col items-center flex-1 h-24 justify-center">
-          <div className="w-[1px] h-20 bg-red-500 relative flex justify-center items-center">
-            <div className="absolute w-2 h-12 bg-red-500 rounded"></div>
-          </div>
-          <span className="text-[6px] font-mono text-white/30 mt-1">09:44</span>
-        </div>
-
-        {/* Candlestick 5 */}
-        <div className="flex flex-col items-center flex-1 h-24 justify-center">
-          <div className="w-[1px] h-20 bg-emerald-500 relative flex justify-center items-center">
-            <div className="absolute w-2 h-16 bg-emerald-500 rounded"></div>
-          </div>
-          <span className="text-[6px] font-mono text-white/30 mt-1">09:45</span>
-        </div>
-      </div>
-
-      {/* Live Matching Signal Trigger indicator at bottom */}
-      <div className="bg-white/5 border border-white/5 rounded-xl p-1.5 flex items-center justify-between text-[8px] font-mono leading-none">
-        <div className="flex items-center gap-1 text-white/50">
-          <CheckCircle2 className="w-3 h-3 text-green-400" />
-          <span>Active matching stream</span>
-        </div>
-        <span className="text-cyan-400 font-bold tracking-tight">LATENCY: 18μs</span>
-      </div>
-    </div>
-  );
-}
+      return <TradeMockup />;
+    };
+  },
+});

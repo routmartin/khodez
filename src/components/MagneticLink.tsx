@@ -1,62 +1,65 @@
-import React, { useRef } from "react";
-import { motion, useMotionValue, useSpring } from "motion/react";
+import { computed, defineComponent, ref, useAttrs } from "vue";
 
-interface MagneticLinkProps {
-  href: string;
-  className?: string;
-  children: React.ReactNode;
-}
+export const MagneticLink = defineComponent({
+  name: "MagneticLink",
+  props: {
+    href: {
+      type: String,
+      required: true,
+    },
+    className: {
+      type: String,
+      default: "",
+    },
+  },
+  setup(props, { slots }) {
+    const attrs = useAttrs();
+    const elementRef = ref<HTMLAnchorElement | null>(null);
+    const x = ref(0);
+    const y = ref(0);
+    const isHovering = ref(false);
 
-export function MagneticLink({ href, className = "", children }: MagneticLinkProps) {
-  const ref = useRef<HTMLAnchorElement>(null);
+    const linkStyle = computed(() => ({
+      transform: `translate3d(${x.value}px, ${y.value}px, 0)`,
+      transition: isHovering.value
+        ? "transform 90ms linear"
+        : "transform 240ms cubic-bezier(0.16, 1, 0.3, 1)",
+      willChange: "transform",
+    }));
 
-  // Motion values to drive hardware-accelerated coordinates
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
+    const handleMouseMove = (event: MouseEvent) => {
+      if (!elementRef.value) return;
 
-  // Bind values with clean physical springs
-  const springConfig = { damping: 15, stiffness: 200, mass: 0.15 };
-  const springX = useSpring(x, springConfig);
-  const springY = useSpring(y, springConfig);
+      const { left, top, width, height } = elementRef.value.getBoundingClientRect();
+      const centerX = left + width / 2;
+      const centerY = top + height / 2;
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!ref.current) return;
-    const { clientX, clientY } = e;
-    const { left, top, width, height } = ref.current.getBoundingClientRect();
+      isHovering.value = true;
+      x.value = (event.clientX - centerX) * 0.35;
+      y.value = (event.clientY - centerY) * 0.35;
+    };
 
-    // Calculate item midpoint of coordinates
-    const centerX = left + width / 2;
-    const centerY = top + height / 2;
+    const handleMouseLeave = () => {
+      isHovering.value = false;
+      x.value = 0;
+      y.value = 0;
+    };
 
-    // Distance offset
-    const deltaX = clientX - centerX;
-    const deltaY = clientY - centerY;
-
-    // Magnetic pull ratio
-    const pullRatio = 0.35;
-    x.set(deltaX * pullRatio);
-    y.set(deltaY * pullRatio);
-  };
-
-  const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
-  };
-
-  return (
-    <motion.a
-      ref={ref}
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{ x: springX, y: springY }}
-      className={`relative inline-flex items-center justify-center ${className}`}
-    >
-      <span className="relative z-10 w-full h-full flex items-center justify-center">
-        {children}
-      </span>
-    </motion.a>
-  );
-}
+    return () => (
+      <a
+        ref={elementRef}
+        href={props.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        onMousemove={handleMouseMove}
+        onMouseleave={handleMouseLeave}
+        style={linkStyle.value}
+        class={["relative inline-flex items-center justify-center", attrs.class, props.className]}
+      >
+        <span class="relative z-10 flex h-full w-full items-center justify-center">
+          {slots.default?.()}
+        </span>
+      </a>
+    );
+  },
+});

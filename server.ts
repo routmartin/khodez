@@ -1,6 +1,5 @@
 import express from "express";
 import path from "path";
-import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 
@@ -8,7 +7,8 @@ dotenv.config();
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const isProduction = process.env.NODE_ENV === "production";
+  const PORT = Number(process.env.PORT || (isProduction ? 3000 : 3001));
 
   app.use(express.json());
 
@@ -18,7 +18,9 @@ async function startServer() {
   if (apiKey && apiKey !== "MY_GEMINI_API_KEY") {
     ai = new GoogleGenAI({ apiKey });
   } else {
-    console.warn("WARNING: GEMINI_API_KEY is not configured or uses placeholder. Chatbot will run in simulation mode.");
+    console.warn(
+      "WARNING: GEMINI_API_KEY is not configured or uses placeholder. Chatbot will run in simulation mode.",
+    );
   }
 
   // API endpoint for interactive digital twin chatbot
@@ -36,16 +38,17 @@ async function startServer() {
           "Hi! I'm A. Chen. I see that my Gemini API key is not yet configured in this environment, but I'm happy to chat! I'm a Senior Full-stack & Mobile App Specialist based in Cambodia. How can I help you?",
           "That's an interesting technical question! Normally, as A. Chen, I'd give you a detailed deep dive. Let's make sure the GEMINI_API_KEY is added under the Secrets settings so I can showcase my full coding capabilities!",
           "Thanks for reaching out! Since my API key is not fully loaded, let me remind you that you can reach me directly at contact@senior-dev.com or +855 12 345 678.",
-          "Whether you are building with Flutter, React Native, or scalable WebSockets, I can assist you with system design, clean architecture, or mobile optimization. Let's connect soon!"
+          "Whether you are building with Flutter, React Native, or scalable WebSockets, I can assist you with system design, clean architecture, or mobile optimization. Let's connect soon!",
         ];
-        const randomReply = fallbackReplies[Math.floor(Math.random() * fallbackReplies.length)];
+        const randomReply =
+          fallbackReplies[Math.floor(Math.random() * fallbackReplies.length)];
         return res.json({ response: randomReply });
       }
 
       // Map incoming simplified message array into Google Gen AI format
       const contents = messages.map((m: any) => ({
         role: m.role === "assistant" ? "model" : "user",
-        parts: [{ text: m.content }]
+        parts: [{ text: m.content }],
       }));
 
       const systemInstruction = `You are A. Chen (Alex Chen), an elite Senior Full-stack Developer and Mobile App Specialist based in Phnom Penh, Cambodia.
@@ -73,24 +76,26 @@ State your answers in clean, concise, scannable format, occasionally using bulle
         config: {
           systemInstruction: systemInstruction,
           temperature: 0.7,
-        }
+        },
       });
 
-      res.json({ response: response.text || "I was unable to formulate a response at the moment." });
+      res.json({
+        response:
+          response.text ||
+          "I was unable to formulate a response at the moment.",
+      });
     } catch (error: any) {
       console.error("Gemini API error:", error);
-      res.status(500).json({ error: error?.message || "An error occurred while connecting to Gemini." });
+      res
+        .status(500)
+        .json({
+          error:
+            error?.message || "An error occurred while connecting to Gemini.",
+        });
     }
   });
 
-  // Vite middleware / asset serving
-  if (process.env.NODE_ENV !== "production") {
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: "spa",
-    });
-    app.use(vite.middlewares);
-  } else {
+  if (isProduction) {
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
     app.get("*", (req, res) => {
@@ -99,7 +104,9 @@ State your answers in clean, concise, scannable format, occasionally using bulle
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(
+      `Server running on port ${PORT}${isProduction ? "" : " (API only)"}`,
+    );
   });
 }
 

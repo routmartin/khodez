@@ -10,11 +10,18 @@ View your app in AI Studio: https://ai.studio/apps/e10f93c1-be51-4f98-8aec-56fe9
 
 ## Run Locally
 
-**Prerequisites:**  Node.js
-
+**Prerequisites:** Node.js
 
 1. Install dependencies:
    `npm install`
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Run the app:
    `npm run dev`
+4. Open the Vite app URL shown in the terminal, usually `http://localhost:5173`
+
+`npm run dev` now starts:
+
+- the Vite frontend dev server
+- the Express API server on port `3001`
+
+Frontend requests to `/api/chat` are proxied to the API server during development.
