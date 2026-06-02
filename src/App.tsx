@@ -21,11 +21,15 @@ import {
   Linkedin,
   Twitter,
   Globe,
-  Code
+  Code,
+  Sun,
+  Moon,
+  Dribbble
 } from "lucide-react";
 import { HeroVisuals } from "./components/HeroVisuals";
 import { ProjectMockups } from "./components/ProjectMockups";
 import { AIChatBot } from "./components/AIChatBot";
+import { MagneticLink } from "./components/MagneticLink";
 import { skillCategories, projects, experiences, articles, articleContents } from "./data";
 import { Experience } from "./types";
 
@@ -33,11 +37,41 @@ export default function App() {
   // Navigation states
   const [activeSection, setActiveSection] = useState("work");
 
+  // Theme State
+  const [theme, setTheme] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("portfolio-theme") || "dark";
+    }
+    return "dark";
+  });
+
+  React.useEffect(() => {
+    const root = document.documentElement;
+    if (theme === "light") {
+      root.classList.add("light");
+    } else {
+      root.classList.remove("light");
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => {
+      const next = prev === "dark" ? "light" : "dark";
+      localStorage.setItem("portfolio-theme", next);
+      return next;
+    });
+  };
+
   // Interaction States
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [copiedPhone, setCopiedPhone] = useState(false);
   const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
   const [selectedExpId, setSelectedExpId] = useState<string>("exp1");
+  const [scrollPercent, setScrollPercent] = useState(0);
+
+  React.useEffect(() => {
+    setScrollPercent(0);
+  }, [selectedArticleId]);
 
   // Clipboard Copier helpers
   const handleCopyEmail = () => {
@@ -65,7 +99,13 @@ export default function App() {
       <div className="absolute bottom-20 left-10 w-[450px] h-[450px] bg-indigo-500/5 filter blur-[110px] rounded-full pointer-events-none"></div>
 
       {/* 1. STICKY GLASS NAVIGATION BAR */}
-      <nav id="floating-navbar" className="sticky top-4 z-40 max-w-5xl mx-auto px-4 mt-4 select-none">
+      <motion.nav 
+        id="floating-navbar" 
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="sticky top-4 z-40 max-w-5xl mx-auto px-4 mt-4 select-none"
+      >
         <div className="glass-container rounded-full px-6 py-3 flex items-center justify-between gap-4 shadow-xl">
           {/* Logo brand */}
           <a href="#" className="flex items-center gap-2 group">
@@ -113,18 +153,29 @@ export default function App() {
             </a>
           </div>
 
-          {/* Action (CV Download Button) */}
-          <a
-            href="https://ai.studio/build"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-4.5 py-1.5.5 rounded-full bg-white/10 border border-white/10 hover:bg-white/20 hover:border-white/25 text-white font-mono text-xs font-medium transition-all cursor-pointer"
-          >
-            <Download className="w-3.5 h-3.5" />
-            <span>Resume</span>
-          </a>
+          {/* Actions (Theme Toggle & CV Download) */}
+          <div className="flex items-center gap-2">
+            {/* Theme Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 text-white transition-all cursor-pointer flex items-center justify-center w-8 h-8 focus:outline-none"
+              title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            >
+              {theme === "dark" ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
+            </button>
+
+            <a
+              href="https://ai.studio/build"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-4.5 py-1.5 rounded-full bg-white/10 border border-white/10 hover:bg-white/20 hover:border-white/25 text-white font-mono text-xs font-medium transition-all cursor-pointer"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Resume</span>
+            </a>
+          </div>
         </div>
-      </nav>
+      </motion.nav>
 
       {/* 2. CORE MASTER PAGE LAYOUT CONTAINER */}
       <main className="max-w-6xl mx-auto px-6 pt-16 pb-24 relative select-text">
@@ -134,27 +185,47 @@ export default function App() {
           
           <div className="max-w-3xl flex flex-col items-center gap-6">
             {/* Soft display tag */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/5 rounded-full text-xs font-mono text-cyan-400 select-none">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/5 rounded-full text-xs font-mono text-cyan-400 select-none"
+            >
               <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
               <span>Open to Consulting & Remote Engineering</span>
-            </div>
+            </motion.div>
 
             {/* Typography Heading paired with Outfit font */}
-            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-tight">
+            <motion.h1 
+              initial={{ opacity: 0, y: 25 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
+              className="font-display text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-tight"
+            >
               Senior Full-stack Developer <br className="hidden sm:inline" />
               <span className="bg-gradient-to-r from-blue-400 via-indigo-200 to-indigo-400 bg-clip-text text-transparent">
                 & Mobile App Specialist
               </span>
-            </h1>
+            </motion.h1>
 
             {/* Subheading text with wide margins for air */}
-            <p className="text-gray-400 text-base sm:text-lg max-w-2xl leading-relaxed font-sans">
+            <motion.p 
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.16 }}
+              className="text-gray-400 text-base sm:text-lg max-w-2xl leading-relaxed font-sans"
+            >
               Architecting high-performance, scalable solutions for web and mobile platforms. 
               Expertise in React, Node.js, Swift, and cloud infrastructure with a keen eye for clean architectural patterns.
-            </p>
+            </motion.p>
 
             {/* Action Buttons rows */}
-            <div className="flex flex-wrap items-center justify-center gap-4.5 mt-2 select-none">
+            <motion.div 
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.24 }}
+              className="flex flex-wrap items-center justify-center gap-4.5 mt-2 select-none"
+            >
               <a
                 href="#featured"
                 className="px-6 py-3 rounded-full bg-indigo-600 hover:bg-indigo-500 font-semibold text-white shadow-[0_0_20px_rgba(79,70,229,0.3)] hover:shadow-[0_0_25px_rgba(79,70,229,0.5)] hover:scale-103 active:scale-97 transition-all cursor-pointer flex items-center gap-2"
@@ -177,13 +248,18 @@ export default function App() {
                 <Download className="w-4 h-4" />
                 <span>Download CV</span>
               </button>
-            </div>
+            </motion.div>
           </div>
 
           {/* Render Interactive Live Developer Dashboard */}
-          <div className="w-full mt-6">
+          <motion.div 
+            initial={{ opacity: 0, y: 35 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.32 }}
+            className="w-full mt-6"
+          >
             <HeroVisuals />
-          </div>
+          </motion.div>
         </section>
 
         {/* 3. CORE EXPERTISE & BENTO CHIPS SECTION */}
@@ -298,7 +374,13 @@ export default function App() {
 
           <div className="space-y-8 text-left">
             {/* PROJECT 1: QuantumFin - (Huge widescreen featured bento display) */}
-            <div className="glass-container rounded-3xl p-6 sm:p-8 flex flex-col lg:flex-row items-center gap-8.5 hover:border-blue-500/20 transition-all duration-300 shadow-xl relative overflow-hidden group">
+            <motion.div 
+              initial={{ opacity: 0, y: 35 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              className="glass-container rounded-3xl p-6 sm:p-8 flex flex-col lg:flex-row items-center gap-8.5 hover:border-blue-500/20 transition-all duration-300 shadow-xl relative overflow-hidden group"
+            >
               {/* Subtle background flair */}
               <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 filter blur-3xl rounded-full"></div>
               
@@ -337,20 +419,26 @@ export default function App() {
                     <div className="grid grid-cols-2 gap-1.5 mt-2 font-mono text-[10px] text-gray-400">
                       {projects[0].features.map((f, fidx) => (
                         <div key={fidx} className="flex items-center gap-1.5">
-                          <span className="w-1 h-1 rounded-full bg-cyan-400"></span>
-                          <span>{f}</span>
+                           <span className="w-1 h-1 rounded-full bg-cyan-400"></span>
+                           <span>{f}</span>
                         </div>
                       ))}
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* PROJECT 2 & 3: Double bento column on desktop */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6.5">
               {/* Project 2 Card */}
-              <div className="glass-container rounded-3xl p-6.5 flex flex-col justify-between hover:border-indigo-500/25 transition-all duration-300 shadow-lg relative group overflow-hidden">
+              <motion.div 
+                initial={{ opacity: 0, y: 35 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                className="glass-container rounded-3xl p-6.5 flex flex-col justify-between hover:border-indigo-500/25 transition-all duration-300 shadow-lg relative group overflow-hidden"
+              >
                 <div className="absolute top-0 right-0 w-24 h-24 bg-cyan-500/5 filter blur-2xl rounded-full"></div>
                 
                 <div>
@@ -378,10 +466,16 @@ export default function App() {
                   <strong className="text-indigo-300 font-mono block text-[9px] uppercase tracking-wider mb-0.5">Integration Outcomes:</strong>
                   {projects[1].businessValue}
                 </div>
-              </div>
+              </motion.div>
 
               {/* Project 3 Card */}
-              <div className="glass-container rounded-3xl p-6.5 flex flex-col justify-between hover:border-emerald-500/25 transition-all duration-300 shadow-lg relative group overflow-hidden">
+              <motion.div 
+                initial={{ opacity: 0, y: 35 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+                className="glass-container rounded-3xl p-6.5 flex flex-col justify-between hover:border-emerald-500/25 transition-all duration-300 shadow-lg relative group overflow-hidden"
+              >
                 <div className="absolute top-0 right-0 w-24 h-24 bg-purple-500/5 filter blur-2xl rounded-full"></div>
 
                 <div>
@@ -396,7 +490,7 @@ export default function App() {
                     
                     <div className="flex items-center gap-2 mt-2 select-none">
                       <span className="text-[10px] bg-white/5 border border-white/5 text-gray-300 px-2 py-0.5 rounded font-mono">React</span>
-                      <span className="text-[10px] bg-white/5 border border-white/5 text-gray-300 px-2 py-0.5 rounded font-mono">Go</span>
+                      <span className="text-[10px] bg-white/5 border border-white/5 text-gray-300 px-2 py-0.5 rounded font-mono font-sans ...">Go</span>
                       <span className="text-[10px] bg-white/5 border border-white/5 text-gray-300 px-2 py-0.5 rounded font-mono">PostgreSQL</span>
                     </div>
 
@@ -410,7 +504,7 @@ export default function App() {
                   <strong className="text-emerald-300 font-mono block text-[9px] uppercase tracking-wider mb-0.5">Integration Outcomes:</strong>
                   {projects[2].businessValue}
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -449,7 +543,13 @@ export default function App() {
             </div>
 
             {/* Display Active Experience Data on Right */}
-            <div className="lg:col-span-2 glass-container rounded-[24px] p-6.5 sm:p-8 min-h-[260px] flex flex-col justify-between relative group">
+            <motion.div 
+              key={selectedExpId}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="lg:col-span-2 glass-container rounded-[24px] p-6.5 sm:p-8 min-h-[260px] flex flex-col justify-between relative group"
+            >
               <div className="absolute top-0 right-0 w-24 h-[4px] bg-gradient-to-r from-indigo-500 to-indigo-800"></div>
 
               <div>
@@ -473,7 +573,7 @@ export default function App() {
                   ))}
                 </ul>
               </div>
-            </div>
+            </motion.div>
           </div>
         </section>
 
@@ -488,9 +588,13 @@ export default function App() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {articles.map((art) => (
-              <div
+            {articles.map((art, artIdx) => (
+              <motion.div
                 key={art.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: artIdx * 0.15 }}
                 onClick={() => setSelectedArticleId(art.id)}
                 className="glass-container rounded-2xl p-5 hover:border-purple-500/20 hover:bg-white/8 transition-all duration-300 shadow-md flex flex-col justify-between cursor-pointer group min-h-[190px] text-left select-none"
               >
@@ -514,7 +618,7 @@ export default function App() {
                     Read Article <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                   </span>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </section>
@@ -522,11 +626,21 @@ export default function App() {
         {/* 7. DYNAMIC ARTICLE ARTICLE DIALOG / MODAL (PORTAL) */}
         {selectedArticleId && activeArticle && activeArticleText && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 select-text">
-            <div 
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
               className="absolute inset-0 bg-black/60 backdrop-blur-md" 
               onClick={() => setSelectedArticleId(null)}
-            ></div>
-            <div className="glass-container rounded-3xl w-full max-w-2xl bg-brand-surface/98 shadow-2xl relative max-h-[85vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            ></motion.div>
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              className="glass-container rounded-3xl w-full max-w-2xl bg-brand-surface/98 shadow-2xl relative max-h-[85vh] flex flex-col overflow-hidden"
+            >
               <div className="absolute top-0 left-0 w-full h-[4px] bg-gradient-to-r from-purple-500 to-indigo-800"></div>
 
               {/* Modal Header */}
@@ -544,8 +658,28 @@ export default function App() {
                 </button>
               </div>
 
+              {/* Dynamic scroll progress indicator */}
+              <div className="absolute top-[4px] left-0 right-0 h-[3px] bg-white/5 overflow-hidden z-10">
+                <div 
+                  className="h-full bg-gradient-to-r from-purple-500 via-indigo-400 to-cyan-400 transition-all duration-75 ease-out" 
+                  style={{ width: `${scrollPercent}%` }}
+                />
+              </div>
+
               {/* Modal Core Text Scroll */}
-              <div className="flex-1 overflow-y-auto p-6 text-left leading-relaxed font-sans text-xs sm:text-sm text-gray-300">
+              <div 
+                onScroll={(e) => {
+                  const target = e.currentTarget;
+                  const totalHeight = target.scrollHeight - target.clientHeight;
+                  if (totalHeight > 0) {
+                    const pct = (target.scrollTop / totalHeight) * 100;
+                    setScrollPercent(pct);
+                  } else {
+                    setScrollPercent(0);
+                  }
+                }}
+                className="flex-1 overflow-y-auto p-6 text-left leading-relaxed font-sans text-xs sm:text-sm text-gray-300"
+              >
                 {/* Simulated lightweight markdown parser rendering */}
                 <div className="space-y-4">
                   {activeArticleText.content.split("\n\n").map((para, pidx) => {
@@ -603,13 +737,19 @@ export default function App() {
                   Close Reader
                 </button>
               </div>
-            </div>
+            </motion.div>
           </div>
         )}
 
         {/* 8. CONTACT INFO CARD AND CONNECTIVITY CHANNELS */}
         <section id="contact" className="py-16 border-t border-white/5 text-center mt-8">
-          <div className="max-w-2xl mx-auto glass-container rounded-[32px] p-8 sm:p-10 relative overflow-hidden select-text">
+          <motion.div 
+            initial={{ opacity: 0, y: 35 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="max-w-2xl mx-auto glass-container rounded-[32px] p-8 sm:p-10 relative overflow-hidden select-text"
+          >
             {/* Status indicators inside layout */}
             <div className="absolute top-0 left-0 w-full h-[4px] bg-gradient-to-r from-emerald-500 to-teal-500"></div>
 
@@ -669,32 +809,26 @@ export default function App() {
 
             {/* Micro Social icons connectors */}
             <div className="flex items-center justify-center gap-5.5 mt-[34px] border-t border-white/5 pt-6 select-none">
-              <a
+              <MagneticLink
                 href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/5 border border-white/5 text-gray-400 hover:text-white hover:border-indigo-500/20 hover:bg-indigo-600/10 flex items-center justify-center transition-all hover:scale-105"
+                className="w-10 h-10 rounded-full bg-white/5 border border-white/5 text-gray-400 hover:text-white hover:border-indigo-500/20 hover:bg-indigo-600/10 transition-all duration-300"
               >
                 <Linkedin className="w-4.5 h-4.5" />
-              </a>
-              <a
+              </MagneticLink>
+              <MagneticLink
                 href="https://github.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/5 border border-white/5 text-gray-400 hover:text-white hover:border-indigo-500/20 hover:bg-indigo-600/10 flex items-center justify-center transition-all hover:scale-105"
+                className="w-10 h-10 rounded-full bg-white/5 border border-white/5 text-gray-400 hover:text-white hover:border-indigo-500/20 hover:bg-indigo-600/10 transition-all duration-300"
               >
                 <Github className="w-4.5 h-4.5" />
-              </a>
-              <a
+              </MagneticLink>
+              <MagneticLink
                 href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/5 border border-white/5 text-gray-400 hover:text-white hover:border-indigo-500/20 hover:bg-indigo-600/10 flex items-center justify-center transition-all hover:scale-105"
+                className="w-10 h-10 rounded-full bg-white/5 border border-white/5 text-gray-400 hover:text-white hover:border-indigo-500/20 hover:bg-indigo-600/10 transition-all duration-300"
               >
                 <Twitter className="w-4.5 h-4.5" />
-              </a>
+              </MagneticLink>
             </div>
-          </div>
+          </motion.div>
         </section>
 
       </main>
@@ -709,11 +843,31 @@ export default function App() {
             <span>© 2026 DevCraft Systems Co. All rights reserved.</span>
           </div>
 
-          <div className="flex items-center gap-5">
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">LinkedIn</a>
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">GitHub</a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Twitter</a>
-            <a href="https://dribbble.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Dribbble</a>
+          <div className="flex items-center gap-4">
+            <MagneticLink
+              href="https://linkedin.com"
+              className="w-8 h-8 rounded-full bg-white/5 border border-white/5 text-gray-400 hover:text-white hover:border-indigo-500/20 hover:bg-indigo-600/10 transition-all duration-300"
+            >
+              <Linkedin className="w-3.5 h-3.5" />
+            </MagneticLink>
+            <MagneticLink
+              href="https://github.com"
+              className="w-8 h-8 rounded-full bg-white/5 border border-white/5 text-gray-400 hover:text-white hover:border-indigo-500/20 hover:bg-indigo-600/10 transition-all duration-300"
+            >
+              <Github className="w-3.5 h-3.5" />
+            </MagneticLink>
+            <MagneticLink
+              href="https://twitter.com"
+              className="w-8 h-8 rounded-full bg-white/5 border border-white/5 text-gray-400 hover:text-white hover:border-indigo-500/20 hover:bg-indigo-600/10 transition-all duration-300"
+            >
+              <Twitter className="w-3.5 h-3.5" />
+            </MagneticLink>
+            <MagneticLink
+              href="https://dribbble.com"
+              className="w-8 h-8 rounded-full bg-white/5 border border-white/5 text-gray-400 hover:text-white hover:border-indigo-500/20 hover:bg-indigo-600/10 transition-all duration-300"
+            >
+              <Dribbble className="w-3.5 h-3.5" />
+            </MagneticLink>
           </div>
 
         </div>

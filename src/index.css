@@ -1,14 +1,72 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@500;700;800&display=swap');
 @import "tailwindcss";
 
+:root {
+  --id-theme: "dark";
+  --brand-bg: #0b0d11;
+  --brand-surface: #111317;
+  /* Basic texts */
+  --brand-text: #f3f4f6; /* text-gray-200 */
+  --brand-text-heading: #ffffff; /* text-white */
+  --brand-text-sub: #9ca3af; /* text-gray-400 */
+  --brand-text-muted: #6b7280; /* text-gray-500 */
+  
+  /* Glass colors */
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-bg-hover: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-border-hover: rgba(255, 255, 255, 0.2);
+  --glass-shadow: rgba(0, 0, 0, 0.4);
+
+  /* Inner elements */
+  --element-bg: rgba(255, 255, 255, 0.05);
+  --element-bg-hover: rgba(255, 255, 255, 0.1);
+  --element-bg-darker: rgba(0, 0, 0, 0.3);
+  --element-border: rgba(255, 255, 255, 0.05);
+
+  /* Specific card background offsets */
+  --card-bg-phone: #0c0e12;
+  --phone-dock-bg: rgba(0, 0, 0, 0.6);
+  --input-bg: #0a0d11;
+}
+
+:root.light {
+  --id-theme: "light";
+  --brand-bg: #f8fafc; /* premium soft zinc white */
+  --brand-surface: #ffffff;
+  /* Basic texts */
+  --brand-text: #334155; /* text-slate-700 */
+  --brand-text-heading: #0f172a; /* text-slate-900 */
+  --brand-text-sub: #475569; /* text-slate-600 */
+  --brand-text-muted: #64748b; /* text-slate-500 */
+  
+  /* Glass colors */
+  --glass-bg: rgba(15, 23, 42, 0.03); /* subtle dark frost on light background */
+  --glass-bg-hover: rgba(15, 23, 42, 0.06);
+  --glass-border: rgba(15, 23, 42, 0.08);
+  --glass-border-hover: rgba(15, 23, 42, 0.15);
+  --glass-shadow: rgba(15, 23, 42, 0.05);
+
+  /* Inner elements */
+  --element-bg: rgba(15, 23, 42, 0.04);
+  --element-bg-hover: rgba(15, 23, 42, 0.08);
+  --element-bg-darker: rgba(15, 23, 42, 0.02);
+  --element-border: rgba(15, 23, 42, 0.05);
+
+  /* Specific card background offsets */
+  --card-bg-phone: #ffffff;
+  --phone-dock-bg: rgba(15, 23, 42, 0.05);
+  --input-bg: #f1f5f9;
+}
+
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Outfit", "Inter", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
   /* Custom palette matching Etheric Engineering spec */
-  --color-brand-bg: #0b0d11;
-  --color-brand-surface: #111317;
+  --color-brand-bg: var(--brand-bg);
+  --color-brand-surface: var(--brand-surface);
   --color-brand-secondary: #0ea5e9; /* Sky Blue */
   --color-brand-tertiary: #a855f7; /* Purple */
   --color-brand-accent: #6366f1; /* Indigo */
@@ -16,28 +74,111 @@
 
 /* Glassmorphism custom global styles & effects */
 .glass-container {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--glass-bg);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--glass-border);
+  transition: background-color 0.4s ease, border-color 0.4s ease;
 }
 
 .glass-container-hover {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background-color 0.4s ease, border-color 0.4s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-container-hover:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-hover);
   transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 20px 40px var(--glass-shadow);
 }
 
 body {
-  background-color: var(--color-brand-bg);
-  color: #f3f4f6;
+  background-color: var(--brand-bg);
+  color: var(--brand-text);
   font-family: var(--font-sans);
   overflow-x: hidden;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* LIGHT MODE COMPREHENSIVE OVERRIDES */
+.light {
+  body, .min-h-screen {
+    background-color: var(--brand-bg) !important;
+    color: var(--brand-text) !important;
+  }
+
+  .text-white {
+    color: var(--brand-text-heading) !important;
+  }
+
+  .text-gray-100, .text-gray-200 {
+    color: var(--brand-text) !important;
+  }
+
+  .text-gray-300 {
+    color: var(--brand-text-sub) !important;
+  }
+
+  .text-gray-400 {
+    color: var(--brand-text-muted) !important;
+  }
+
+  /* Semi-transparent text overrides */
+  .text-white\/30 {
+    color: rgba(15, 23, 42, 0.35) !important;
+  }
+  .text-white\/45, .text-white\/40, .text-white\/50 {
+    color: var(--brand-text-muted) !important;
+  }
+  .text-white\/60, .text-white\/70, .text-white\/80 {
+    color: var(--brand-text-sub) !important;
+  }
+  .text-white\/90 {
+    color: var(--brand-text-heading) !important;
+  }
+
+  /* Transparent background overrides */
+  .bg-white\/5, .bg-white\/2 {
+    background-color: var(--element-bg) !important;
+  }
+  .hover:bg-white\/10:hover {
+    background-color: var(--element-bg-hover) !important;
+  }
+  .bg-white\/10 {
+    background-color: var(--element-bg-hover) !important;
+  }
+
+  /* Border overrides */
+  .border-white\/5, .border-white\/10 {
+    border-color: var(--element-border) !important;
+  }
+
+  /* Specific component overrides */
+  .bg-brand-surface {
+    background-color: var(--brand-surface) !important;
+  }
+  .bg-brand-surface\/98 {
+    background-color: rgba(255, 255, 255, 0.98) !important;
+  }
+  .bg-brand-surface\/95 {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+  }
+
+  #floating-navbar .bg-white\/10 {
+    background-color: rgba(15, 23, 42, 0.05) !important;
+    color: var(--brand-text-sub) !important;
+  }
+  #floating-navbar .text-white\/60 {
+    color: var(--brand-text-muted) !important;
+  }
+  #floating-navbar .text-white\/60:hover {
+    color: var(--brand-text-heading) !important;
+  }
+
+  /* SVG/Graphic paths */
+  .text-indigo-200 {
+    color: #4f46e5 !important;
+  }
 }
 
 /* Scrollbar layout */
