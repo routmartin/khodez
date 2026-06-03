@@ -1,17 +1,23 @@
 export interface SkillCategory {
   category: string;
+  description?: string;
   skills: string[];
+  usedIn?: string[];
 }
 
 export interface Project {
   id: string;
   number: number;
   title: string;
+  company?: string;
+  role?: string;
+  scope?: string;
   description: string;
   tags: { name: string; type: "tech" | "platform" }[];
   businessValue: string;
   features: string[];
-  mockType: "fintech" | "chat" | "trade";
+  technicalHighlights?: string[];
+  mockType: "fintech" | "htp" | "chat" | "trade" | "commerce" | "pos" | "systems";
 }
 
 export interface Experience {
@@ -19,6 +25,10 @@ export interface Experience {
   title: string;
   company: string;
   duration: string;
+  summary?: string;
+  focus?: string[];
+  techStack?: string[];
+  projects?: string[];
   achievements: string[];
 }
 

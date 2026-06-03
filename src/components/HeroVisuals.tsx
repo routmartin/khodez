@@ -52,8 +52,8 @@ export const HeroVisuals = defineComponent({
 
     return () => (
       <div class="relative mx-auto flex w-full max-w-5xl flex-col items-center justify-center gap-6 px-4 py-8 md:flex-row">
-      {/* 1. Styled Terminal with GraphQL Query (Center-left foreground element) */}
-      <div class="glass-container group relative w-full overflow-hidden rounded-2xl p-5 shadow-2xl transition-all duration-500 hover:border-brand-accent/40 md:w-[45%]">
+      {/* 1. Styled terminal with mobile payment request flow */}
+      <div class="glass-container hero-motion-card group relative w-full overflow-hidden rounded-2xl p-5 shadow-2xl transition-all duration-500 hover:border-brand-accent/40 md:w-[45%]">
         <div class="absolute left-0 top-0 h-[3px] w-full bg-gradient-to-r from-teal-500 via-indigo-500 to-brand-tertiary opacity-70"></div>
         
         {/* Terminal Header */}
@@ -62,7 +62,7 @@ export const HeroVisuals = defineComponent({
             <span class="inline-block h-3 w-3 rounded-full bg-red-500/80"></span>
             <span class="inline-block h-3 w-3 rounded-full bg-yellow-500/80"></span>
             <span class="inline-block h-3 w-3 rounded-full bg-green-500/80"></span>
-            <span class="ml-2 font-mono text-xs text-white/50">GraphQL API Query</span>
+          <span class="ml-2 font-mono text-xs text-white/50">Flutter API Flow</span>
           </div>
           <div class="flex items-center font-mono text-xs text-white/40">
             <Terminal class="mr-1 h-3.5 w-3.5" />
@@ -70,30 +70,17 @@ export const HeroVisuals = defineComponent({
           </div>
         </div>
 
-        {/* Live GraphQL Snippet */}
+        {/* Live mobile request snippet */}
         <div class="overflow-x-auto py-2 text-left font-mono text-xs leading-relaxed">
-          <span class="text-pink-400">query</span>{" "}
-          <span class="text-cyan-400">GetUser</span>(
-          <span class="text-yellow-400">$id</span>:{" "}
-          <span class="text-teal-400">ID!</span>) {"{"}
+          <span class="text-pink-400">await</span>{" "}
+          <span class="text-cyan-400">paymentRepository</span>.
+          <span class="text-purple-300">confirmTransfer</span>({"{"}
           <div class="pl-4">
-            <span class="text-purple-300">user</span>(id: <span class="text-yellow-400">$id</span>) {"{"}
-            <div class="pl-4 text-white/80">
-              <div>id</div>
-              <div>name</div>
-              <div>role</div>
-              <div class="text-purple-300">
-                latestActivity {"{"}
-                <div class="pl-4 text-white/80">
-                  <div>type</div>
-                  <div>timestamp</div>
-                </div>
-                {"}"}
-              </div>
-            </div>
-            {"}"}
+            <div><span class="text-yellow-400">channel</span>: <span class="text-teal-400">"KHQR"</span>,</div>
+            <div><span class="text-yellow-400">auth</span>: <span class="text-teal-400">"paymentPin"</span>,</div>
+            <div><span class="text-yellow-400">retryPolicy</span>: <span class="text-teal-400">pollingStatus</span>,</div>
           </div>
-          {"}"}
+          {"});"}
         </div>
 
         {/* Quick query stats indicators */}
@@ -104,7 +91,7 @@ export const HeroVisuals = defineComponent({
       </div>
 
       {/* 2. Interactive Phone Mockup */}
-      <div class="theme-device-shell group isolate relative flex h-[550px] w-full flex-col overflow-hidden rounded-[40px] border-[6px] sm:w-[280px]">
+      <div class="theme-device-shell hero-motion-card group isolate relative flex h-[550px] w-full flex-col overflow-hidden rounded-[40px] border-[6px] sm:w-[280px]">
         {/* Dynamic decorative backdrop radial gradient inside the phone */}
         <div class="pointer-events-none absolute inset-x-0 top-1/4 -z-10 h-1/2 rounded-full bg-blue-500/10 blur-3xl transition-all duration-700 group-hover:bg-indigo-500/15"></div>
         
@@ -124,8 +111,8 @@ export const HeroVisuals = defineComponent({
         {/* Mobile Header Widget */}
         <div class="flex items-center justify-between border-b border-white/5 px-6 pb-2 pt-3">
           <div>
-            <h5 class="font-mono text-[10px] uppercase leading-none text-white/40">Gateway Applet</h5>
-            <h4 class="mt-1 text-xs font-semibold text-white">A. Chen Digital Twin</h4>
+            <h5 class="font-mono text-[10px] uppercase leading-none text-white/40">Mobile Team Lead Console</h5>
+            <h4 class="mt-1 text-xs font-semibold text-white">Rout Martin Digital Twin</h4>
           </div>
           <button class="relative rounded-full bg-white/5 p-1.5 text-white/80 transition-colors hover:bg-white/10">
             <Bell class="h-3.5 w-3.5" />
@@ -206,11 +193,11 @@ export const HeroVisuals = defineComponent({
               </div>
               <div class="flex items-center gap-1 rounded-lg border border-white/5 bg-white/5 p-1 px-1.5 text-white/80">
                 <span class="h-1.5 w-1.5 rounded-full bg-purple-400"></span>
-                <span>Node & Go</span>
+                <span>Bloc/Cubit</span>
               </div>
               <div class="flex items-center gap-1 rounded-lg border border-white/5 bg-white/5 p-1 px-1.5 text-white/80">
                 <span class="h-1.5 w-1.5 rounded-full bg-teal-400"></span>
-                <span>GraphQL DB</span>
+                <span>Dio + Socket</span>
               </div>
               <div class="flex items-center gap-1 rounded-lg border border-white/5 bg-white/5 p-1 px-1.5 text-white/80">
                 <span class="h-1.5 w-1.5 rounded-full bg-yellow-400"></span>
@@ -252,7 +239,7 @@ export const HeroVisuals = defineComponent({
       {/* 3. Floating Infrastructure Status Cards (Right side element) */}
       <div class="relative z-10 flex w-full flex-col gap-3.5 text-left select-none md:w-[30%]">
         {/* Status Card 1: API Gateway */}
-        <div class="glass-container group flex items-center gap-3.5 rounded-2xl p-3.5 shadow-lg transition-all duration-300 hover:border-emerald-500/30">
+        <div class="glass-container hero-motion-card group flex items-center gap-3.5 rounded-2xl p-3.5 shadow-lg transition-all duration-300 hover:border-emerald-500/30">
           <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 transition-all group-hover:bg-emerald-500/20">
             <Server class="h-5 w-5" />
           </div>
@@ -267,7 +254,7 @@ export const HeroVisuals = defineComponent({
         </div>
 
         {/* Status Card 2: Database Cluster */}
-        <div class="glass-container group flex items-center gap-3.5 rounded-2xl p-3.5 shadow-lg transition-all duration-300 hover:border-sky-500/30">
+        <div class="glass-container hero-motion-card group flex items-center gap-3.5 rounded-2xl p-3.5 shadow-lg transition-all duration-300 hover:border-sky-500/30">
           <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-500/10 text-sky-400 transition-all group-hover:bg-sky-500/20">
             <Database class="h-5 w-5" />
           </div>
@@ -282,7 +269,7 @@ export const HeroVisuals = defineComponent({
         </div>
 
         {/* Status Card 3: Cache Service */}
-        <div class="glass-container group flex items-center gap-3.5 rounded-2xl p-3.5 shadow-lg transition-all duration-300 hover:border-purple-500/30">
+        <div class="glass-container hero-motion-card group flex items-center gap-3.5 rounded-2xl p-3.5 shadow-lg transition-all duration-300 hover:border-purple-500/30">
           <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/10 text-purple-400 transition-all group-hover:bg-purple-500/20">
             <Activity class="h-5 w-5" />
           </div>

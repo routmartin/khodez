@@ -10,7 +10,7 @@ export const AIChatBot = defineComponent({
       {
         role: "assistant",
         content:
-          "Hello! I am A. Chen's digital twin, trained on my actual portfolio data and engineering experience. Ask me anything about my work in full-stack, systems architecture, or mobile applications!",
+          "Hello! I am Rout Martin's digital twin, trained on his portfolio and shipped work across DV Pay, HTP, chat/audio call, exchange, e-commerce, POS, and business systems. Ask me about Flutter, fintech, mobile architecture, payments, localization, or release delivery.",
         timestamp: new Date(),
       },
     ]);
@@ -20,9 +20,9 @@ export const AIChatBot = defineComponent({
 
     const suggestions = [
       "Are you available for contract roles?",
-      "Tell me about the QuantumFin project.",
-      "Explain your Clean Architecture implementation.",
-      "What is your tech stack for scalable backends?",
+      "Tell me about the DV Pay project.",
+      "What fintech work has Rout delivered?",
+      "Which projects show technical leadership?",
     ];
 
     watch(
@@ -126,7 +126,7 @@ export const AIChatBot = defineComponent({
                   <Sparkles class="h-5 w-5 animate-pulse" />
                 </div>
                 <div class="text-left">
-                  <h4 class="flex items-center gap-1.5 text-sm font-bold text-white">A. Chen Digital Twin</h4>
+                  <h4 class="flex items-center gap-1.5 text-sm font-bold text-white">Rout Martin Digital Twin</h4>
                   <span class="flex items-center gap-1 font-mono text-[10px] text-green-400">
                     <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-green-400"></span>
                     Gemini 3.5 Flash Model
@@ -200,7 +200,7 @@ export const AIChatBot = defineComponent({
                       <button
                         key={suggestion}
                         onClick={() => void handleSendMessage(suggestion)}
-                        class="max-w-full cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-left text-[11px] text-white/80 transition-all hover:border-indigo-500/30 hover:bg-indigo-600/20 active:scale-95"
+                        class="max-w-full cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap rounded-2xl border border-white/10 bg-white/5 px-2.5 py-1 text-left text-[11px] text-white/80 transition-all hover:border-indigo-500/30 hover:bg-indigo-600/20 active:scale-95"
                       >
                         {suggestion}
                       </button>
@@ -222,7 +222,7 @@ export const AIChatBot = defineComponent({
                   onInput={(event) => {
                     input.value = (event.target as HTMLInputElement).value;
                   }}
-                  placeholder="Ask digital companion A. Chen..."
+                  placeholder="Ask Rout Martin's digital companion..."
                   class="theme-input-surface h-9 flex-1 rounded-lg border p-3 text-xs placeholder-white/30 focus:border-indigo-400 focus:outline-none"
                 />
                 <button
