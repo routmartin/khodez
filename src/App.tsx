@@ -250,6 +250,26 @@ export default defineComponent({
         projects.find((project) => project.id === selectedProjectId.value) ||
         null,
     );
+    const usedInChipAccents = [
+      "56 189 248",
+      "52 211 153",
+      "129 140 248",
+      "217 70 239",
+      "251 191 36",
+      "45 212 191",
+      "34 211 238",
+    ];
+    const getUsedInChipStyle = (value: string, seed = 0) => {
+      let hash = 0;
+      const target = `${value}-${seed}`;
+      for (let idx = 0; idx < target.length; idx += 1) {
+        hash = (hash << 5) - hash + target.charCodeAt(idx);
+        hash |= 0;
+      }
+      return {
+        "--chip-accent": usedInChipAccents[Math.abs(hash) % usedInChipAccents.length],
+      } as Record<string, string>;
+    };
 
     return () => {
       const article = activeArticle.value;
@@ -446,9 +466,7 @@ export default defineComponent({
                 </p>
 
                    {/* Soft display tag */}
-        
-
-              
+      
 
                 {/* Action Buttons rows */}
                 <div class="flex flex-wrap items-center justify-center gap-3.5 mt-2 select-none">
@@ -712,23 +730,7 @@ export default defineComponent({
                 class="wallet-stack-expertise select-none reveal-on-scroll reveal-delay-1"
                 data-reveal
               >
-                <div class="wallet-stack-controls">
-                  {expertiseCards.map((card, index) => (
-                    <button
-                      key={card.label}
-                      type="button"
-                      onClick={() => setActiveExpertise(index)}
-                      class={`rounded-2xl border px-3 py-1.5 text-sm font-mono transition-all ${
-                        activeExpertiseIndex.value === index
-                          ? card.badgeClass
-                          : "border-white/5 bg-white/5 text-white/50 hover:bg-white/10 hover:text-white"
-                      }`}
-                    >
-                      {card.label}
-                    </button>
-                  ))}
-                </div>
-
+        
                 <div class="wallet-stack-stage" aria-live="polite">
                   {expertiseCards.map((card, index) => {
                     const sliderOffset = getExpertiseSliderOffset(
@@ -887,19 +889,17 @@ export default defineComponent({
                           <p class="mb-2 text-sm font-mono uppercase tracking-wide text-white/40">
                             Used in
                           </p>
-                          <span
-                            class={`inline-flex rounded-2xl border px-2.5 py-1.5 text-sm font-mono ${
-                              idx === 0
-                                ? "border-sky-400/20 bg-sky-400/10 text-sky-300"
-                                : idx === 1
-                                  ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-300"
-                                  : idx === 2
-                                    ? "border-violet-400/20 bg-violet-400/10 text-violet-300"
-                                    : "border-amber-400/20 bg-amber-400/10 text-amber-300"
-                            }`}
-                          >
-                            {sc.usedIn.join(" / ")}
-                          </span>
+                            <div class="flex flex-wrap gap-2">
+                            {sc.usedIn.map((item, itemIdx) => (
+                              <span
+                                key={item}
+                                class="liquid-chip inline-flex items-center rounded-full border border-current px-3 py-1 text-sm font-mono"
+                                style={getUsedInChipStyle(item, idx + itemIdx)}
+                              >
+                                {item}
+                              </span>
+                            ))}
+                          </div>
                         </div>
                       ) : null}
                     </div>

@@ -683,11 +683,13 @@ html {
   isolation: isolate;
   min-height: 21.5rem;
   overflow: hidden;
-  width: clamp(20rem, 68vw, 34rem);
+  width: clamp(22rem, 72vw, 38rem);
   border: 0;
   border-radius: 1.5rem;
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--brand-surface) 94%, transparent), color-mix(in srgb, var(--glass-bg) 82%, var(--brand-surface)));
+    linear-gradient(180deg, color-mix(in srgb, var(--brand-surface) 98%, #020617), color-mix(in srgb, var(--brand-surface) 88%, var(--glass-bg)));
+  backdrop-filter: blur(8px) saturate(1.05);
+  -webkit-backdrop-filter: blur(8px) saturate(1.05);
   color: inherit;
   cursor: pointer;
   box-shadow:
@@ -922,7 +924,7 @@ html {
   }
 
   .wallet-stack-card {
-    width: min(78vw, 23rem);
+    width: min(84vw, 26rem);
   }
 
   .wallet-slider-card--1 {
@@ -1300,6 +1302,20 @@ html {
   padding-left: 0.2rem;
 }
 
+.liquid-chip {
+  --chip-accent: 56 189 248;
+  background: transparent;
+  color: rgb(var(--chip-accent));
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  transition: color 0.2s ease;
+}
+
+:root.light .liquid-chip {
+  background: transparent;
+  color: color-mix(in srgb, rgb(var(--chip-accent)) 72%, var(--brand-text-heading));
+}
+
 @media (min-width: 1200px) {
   .journey-map-grid {
     --journey-gap: 1.2rem;
@@ -1363,5 +1379,9 @@ html {
   .motion-shimmer::after,
   .nav-link::before {
     display: none;
+  }
+
+  .liquid-chip {
+    transition: none;
   }
 }
