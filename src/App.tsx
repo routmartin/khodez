@@ -441,7 +441,6 @@ export default defineComponent({
               >
              
 
-                {/* Typography Heading paired with Outfit font */}
                 <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-tight">
                   Mobile Team Lead & Full Stack Web <br class="hidden sm:inline" />
                   <span class="bg-gradient-to-r from-blue-400 via-indigo-200 to-indigo-400 bg-clip-text text-transparent">
@@ -549,7 +548,7 @@ export default defineComponent({
                           class={`journey-node ${isActive ? "is-active" : ""} ${index % 2 === 1 ? "journey-node--lower" : ""}`}
                         >
                           <span class="journey-node__card glass-container">
-                            <span class="journey-node__step">0{index + 1}</span>
+                            {/* <span class="journey-node__step">0{index + 1}</span> */}
                             <span class="journey-node__eyebrow">
                               {exp.duration}
                             </span>
@@ -725,6 +724,26 @@ export default defineComponent({
               class="section-anchor py-12 border-t border-white/5 select-text"
             >
 
+                 {/* Skill matrix block */}
+              <div
+                class=" text-left reveal-on-scroll reveal-delay-2"
+                data-reveal
+              >
+              <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between mb-8">
+                  <div>
+                    <p class="text-sm font-mono uppercase tracking-wide text-indigo-300">
+                      Skill Matrix
+                    </p>
+                    <h4
+                      id="skills-subgroup"
+                      class="mt-1 font-display text-2xl font-bold text-white"
+                    >
+                      Practical skills by product area
+                    </h4>
+                  </div>
+                 
+                </div>
+
               {/* Core expertise cards */}
               <div
                 class="wallet-stack-expertise select-none reveal-on-scroll reveal-delay-1"
@@ -820,26 +839,6 @@ export default defineComponent({
                 </div>
               </div>
 
-              {/* Skill matrix block */}
-              <div
-                class="mt-16 text-left reveal-on-scroll reveal-delay-2"
-                data-reveal
-              >
-                <div class="mb-7 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                  <div>
-                    <p class="text-sm font-mono uppercase tracking-wide text-indigo-300">
-                      Skill Matrix
-                    </p>
-                    <h4
-                      id="skills-subgroup"
-                      class="mt-1 font-display text-2xl font-bold text-white"
-                    >
-                      Practical skills by product area
-                    </h4>
-                  </div>
-                 
-                </div>
-
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                   {skillCategories.map((sc, idx) => (
                     <div
@@ -886,14 +885,14 @@ export default defineComponent({
 
                       {sc.usedIn?.length ? (
                         <div class="mt-5 border-t border-white/5 pt-4">
-                          <p class="mb-2 text-sm font-mono uppercase tracking-wide text-white/40">
-                            Used in
+                          <p class="mb-2 text-sm font-mono uppercase tracking-wide text-white pb-2">
+                            Used in projects like
                           </p>
                             <div class="flex flex-wrap gap-2">
                             {sc.usedIn.map((item, itemIdx) => (
                               <span
                                 key={item}
-                                class="liquid-chip inline-flex items-center rounded-full border border-current px-3 py-1 text-sm font-mono"
+                                class="liquid-chip inline-flex items-center rounded-lg border border-current px-5 py-2 text-sm transition-colors hover:bg-white/10 hover:text-white"
                                 style={getUsedInChipStyle(item, idx + itemIdx)}
                               >
                                 {item}
@@ -1164,14 +1163,14 @@ export default defineComponent({
                 data-reveal
               >
                 <div>
-                  <span class="text-[10px] font-mono tracking-widest text-[#a855f7] uppercase font-bold">
+                  <span class="text-xs font-mono tracking-[0.22em] text-[#a855f7] uppercase font-bold">
                     Tech Insights
                   </span>
-                  <h3 class="font-display text-2xl font-bold text-white mt-0.5">
+                  <h3 class="mt-1 font-display text-2xl font-bold text-white sm:text-3xl">
                     Knowledge Sharing (for Cambodian Devs)
                   </h3>
                 </div>
-                <span class="text-xs font-mono text-white/40">
+                <span class="text-xs font-mono tracking-[0.08em] text-white/45">
                   Free tutorials & open tutorials
                 </span>
               </div>
@@ -1191,19 +1190,19 @@ export default defineComponent({
                   >
                     <div>
                       <div class="flex justify-between items-center mb-3">
-                        <span class="text-[9px] font-mono tracking-wide text-purple-400 bg-purple-950/40 p-1 px-2 rounded-2xl uppercase">
+                        <span class="rounded-2xl bg-purple-950/40 px-2.5 py-1 text-[11px] font-mono font-semibold uppercase tracking-[0.14em] text-purple-300">
                           {art.category}
                         </span>
                         <BookOpen class="w-4 h-4 text-white/30 group-hover:text-purple-400 transition-colors" />
                       </div>
-                      <h4 class="text-sm font-bold text-white group-hover:text-purple-300 font-display transition-colors mb-2">
+                      <h4 class="mb-2 font-display text-base font-bold leading-snug text-white transition-colors group-hover:text-purple-300 sm:text-lg">
                         {art.title}
                       </h4>
-                      <p class="text-[11.5px] text-gray-400 leading-relaxed font-sans">
+                      <p class="text-sm leading-6 text-gray-400 font-sans">
                         {art.excerpt}
                       </p>
                     </div>
-                    <div class="flex justify-between items-center mt-5 pt-3 border-t border-white/5 text-[10px] font-mono text-white/30">
+                    <div class="mt-5 flex items-center justify-between border-t border-white/5 pt-3 text-[11px] font-mono tracking-[0.08em] text-white/35">
                       <span>{art.readTime}</span>
                       <span class="flex items-center gap-1 group-hover:text-white transition-colors">
                         Read Article{" "}
@@ -1354,19 +1353,18 @@ export default defineComponent({
             {/* 8. CONTACT INFO CARD AND CONNECTIVITY CHANNELS */}
             <section
               id="contact"
-              class="section-anchor py-16 border-t border-white/5 mt-8"
+              class="section-anchor mt-10 border-t border-white/5 py-20"
             >
               <div
-                class="max-w-5xl mx-auto glass-container rounded-[36px] p-6 sm:p-10 lg:p-12 relative overflow-hidden select-text reveal-on-scroll"
+                class="relative mx-auto max-w-7xl overflow-hidden rounded-[36px] glass-container p-8 sm:p-12 lg:p-16 select-text reveal-on-scroll"
                 data-reveal
               >
                 {/* Status indicators inside layout */}
                 <div class="absolute top-0 left-0 w-full h-[4px] bg-gradient-to-r from-emerald-500 to-teal-500"></div>
                 <div class="absolute -top-12 right-0 w-52 h-52 bg-emerald-500/10 blur-3xl rounded-full pointer-events-none"></div>
                 <div class="absolute bottom-0 left-0 w-40 h-40 bg-cyan-500/10 blur-3xl rounded-full pointer-events-none"></div>
-
-                <div class="max-w-2xl mx-auto relative z-10 flex flex-col gap-4 sm:gap-6 text-left">
-                  <div class="rounded-[28px] border border-white/5 bg-white/4 px-4 py-5 sm:px-7 sm:py-7">
+                <div class="relative z-10 mx-auto flex max-w-4xl flex-col gap-5 text-left sm:gap-7">
+                  <div class="rounded-[28px] border border-white/5 bg-white/4 px-5 py-6 sm:px-8 sm:py-8">
                     <div class="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-[10px] font-mono text-emerald-400 select-none">
                       <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                       <span>Open for new work</span>
@@ -1392,7 +1390,7 @@ export default defineComponent({
                     </div>
                   </div>
 
-                  <div class="rounded-[28px] border border-white/5 bg-white/4 px-4 py-5 sm:px-7 sm:py-7">
+                  <div class="rounded-[28px] border border-white/5 bg-white/4 px-5 py-6 sm:px-8 sm:py-8">
                     <div class="flex flex-col gap-1 mb-5 select-none">
                       <p class="text-[10px] font-mono uppercase tracking-[0.24em] text-indigo-300">
                         Direct Contact
@@ -1403,7 +1401,7 @@ export default defineComponent({
                     </div>
 
                     <div class="flex flex-col gap-3.5">
-                      <div class="rounded-[22px] border border-white/5 bg-white/3 p-4 sm:p-5">
+                      <div class="rounded-[22px] border border-white/5 bg-white/3 p-5 sm:p-6">
                         <div class="flex items-center gap-3">
                           <div class="w-11 h-11 rounded-2xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center shrink-0">
                             <Mail class="w-5 h-5" />
@@ -1444,7 +1442,7 @@ export default defineComponent({
                         </div>
                       </div>
 
-                      <div class="rounded-[22px] border border-white/5 bg-white/3 p-4 sm:p-5">
+                      <div class="rounded-[22px] border border-white/5 bg-white/3 p-5 sm:p-6">
                         <div class="flex items-center gap-3">
                           <div class="w-11 h-11 rounded-2xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center shrink-0">
                             <Phone class="w-5 h-5" />
@@ -1485,7 +1483,7 @@ export default defineComponent({
                         </div>
                       </div>
 
-                      <div class="rounded-[22px] border border-white/5 bg-black/15 px-4 py-4 sm:px-5">
+                      <div class="rounded-[22px] border border-white/5 bg-black/15 px-5 py-5 sm:px-6 sm:py-6">
                         <p class="text-[10px] font-mono uppercase tracking-[0.22em] text-emerald-300">
                           Availability
                         </p>
