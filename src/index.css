@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@500;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Sora:wght@500;600;700;800&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -40,44 +40,44 @@
 
 :root.light {
   --id-theme: "light";
-  --brand-bg: #f7f0e5;
-  --brand-surface: rgba(255, 251, 245, 0.88);
-  --brand-text: #354154;
-  --brand-text-heading: #162033;
-  --brand-text-sub: #536276;
-  --brand-text-muted: #778396;
+  --brand-bg: #f3f7fb;
+  --brand-surface: rgba(255, 255, 255, 0.88);
+  --brand-text: #334155;
+  --brand-text-heading: #0f172a;
+  --brand-text-sub: #475569;
+  --brand-text-muted: #64748b;
   --page-gradient:
-    radial-gradient(circle at top left, rgba(251, 191, 36, 0.18), transparent 28%),
-    radial-gradient(circle at 86% 16%, rgba(59, 130, 246, 0.14), transparent 30%),
-    radial-gradient(circle at 52% 100%, rgba(20, 184, 166, 0.14), transparent 28%),
-    linear-gradient(180deg, #fffdf8 0%, #f7f0e5 48%, #efe5d5 100%);
-  --glass-bg: rgba(255, 251, 245, 0.68);
+    radial-gradient(circle at top left, rgba(14, 165, 233, 0.12), transparent 28%),
+    radial-gradient(circle at 78% 18%, rgba(99, 102, 241, 0.1), transparent 30%),
+    radial-gradient(circle at 50% 100%, rgba(168, 85, 247, 0.08), transparent 28%),
+    linear-gradient(180deg, #f8fbff 0%, #f3f7fb 50%, #e8eef7 100%);
+  --glass-bg: rgba(255, 255, 255, 0.68);
   --glass-bg-hover: rgba(255, 255, 255, 0.9);
-  --glass-border: rgba(148, 163, 184, 0.2);
-  --glass-border-hover: rgba(99, 102, 241, 0.2);
-  --glass-shadow: rgba(157, 126, 86, 0.14);
-  --element-bg: rgba(255, 255, 255, 0.58);
-  --element-bg-hover: rgba(255, 255, 255, 0.84);
-  --element-bg-darker: rgba(226, 232, 240, 0.72);
-  --element-border: rgba(148, 163, 184, 0.16);
-  --card-bg-phone: #fffbf5;
-  --phone-dock-bg: rgba(226, 232, 240, 0.72);
-  --device-border: rgba(148, 163, 184, 0.22);
-  --device-shadow: rgba(169, 140, 99, 0.14);
-  --device-notch: #d8e1eb;
-  --mockup-surface: #fbfcff;
-  --mockup-surface-alt: #f8f3ea;
-  --overlay-backdrop: rgba(228, 218, 201, 0.68);
-  --input-bg: #fffdfa;
+  --glass-border: rgba(100, 116, 139, 0.16);
+  --glass-border-hover: rgba(79, 70, 229, 0.24);
+  --glass-shadow: rgba(15, 23, 42, 0.11);
+  --element-bg: rgba(255, 255, 255, 0.62);
+  --element-bg-hover: rgba(255, 255, 255, 0.86);
+  --element-bg-darker: rgba(226, 232, 240, 0.74);
+  --element-border: rgba(100, 116, 139, 0.14);
+  --card-bg-phone: #f8fbff;
+  --phone-dock-bg: rgba(226, 232, 240, 0.76);
+  --device-border: rgba(100, 116, 139, 0.2);
+  --device-shadow: rgba(15, 23, 42, 0.12);
+  --device-notch: #dbe7f3;
+  --mockup-surface: #f8fbff;
+  --mockup-surface-alt: #eef4fb;
+  --overlay-backdrop: rgba(15, 23, 42, 0.34);
+  --input-bg: #f8fbff;
   --input-border: rgba(100, 116, 139, 0.18);
   --blob-one: rgba(56, 189, 248, 0.22);
-  --blob-two: rgba(251, 146, 60, 0.16);
+  --blob-two: rgba(168, 85, 247, 0.12);
   --blob-three: rgba(129, 140, 248, 0.18);
 }
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Outfit", "Inter", sans-serif;
+  --font-display: "Sora", "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   --color-brand-bg: var(--brand-bg);
   --color-brand-surface: var(--brand-surface);
@@ -113,6 +113,11 @@ body {
   font-family: var(--font-sans);
   overflow-x: hidden;
   transition: background-color 0.4s ease, background-image 0.4s ease, color 0.4s ease;
+}
+
+.font-display {
+  letter-spacing: 0 !important;
+  text-wrap: balance;
 }
 
 .theme-blob {
@@ -285,7 +290,7 @@ body {
 }
 
 :root.light .glass-container {
-  box-shadow: 0 22px 50px rgba(172, 144, 108, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.74);
+  box-shadow: 0 22px 50px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.74);
 }
 
 :root.light .text-white {
@@ -302,10 +307,16 @@ body {
   color: var(--brand-text-sub) !important;
 }
 
-:root.light .text-white\/30 {
-  color: rgba(83, 98, 118, 0.5) !important;
+:root.light .text-white\/10,
+:root.light .text-white\/20 {
+  color: rgba(100, 116, 139, 0.34) !important;
 }
 
+:root.light .text-white\/30 {
+  color: rgba(100, 116, 139, 0.52) !important;
+}
+
+:root.light .text-white\/35,
 :root.light .text-white\/40,
 :root.light .text-white\/45,
 :root.light .text-white\/50 {
@@ -314,7 +325,9 @@ body {
 
 :root.light .text-white\/60,
 :root.light .text-white\/70,
-:root.light .text-white\/80 {
+:root.light .text-white\/75,
+:root.light .text-white\/80,
+:root.light .text-white\/85 {
   color: var(--brand-text) !important;
 }
 
@@ -323,7 +336,10 @@ body {
 }
 
 :root.light .bg-white\/2,
-:root.light .bg-white\/5 {
+:root.light .bg-white\/3,
+:root.light .bg-white\/4,
+:root.light .bg-white\/5,
+:root.light .bg-white\/8 {
   background-color: var(--element-bg) !important;
 }
 
@@ -339,18 +355,29 @@ body {
   background-color: rgba(255, 255, 255, 0.72) !important;
 }
 
+:root.light .bg-white\/20 {
+  background-color: rgba(255, 255, 255, 0.82) !important;
+}
+
 :root.light .bg-black\/10,
+:root.light .bg-black\/15,
 :root.light .bg-black\/20,
+:root.light .bg-black\/25,
+:root.light .bg-black\/40,
 :root.light .bg-black\/60 {
   background-color: var(--element-bg-darker) !important;
 }
 
+:root.light .bg-black\/70,
 :root.light .bg-black\/45 {
   background-color: var(--overlay-backdrop) !important;
 }
 
 :root.light .border-white\/5,
-:root.light .border-white\/10 {
+:root.light .border-white\/10,
+:root.light .border-white\/15,
+:root.light .border-white\/25,
+:root.light .border-white\/40 {
   border-color: var(--element-border) !important;
 }
 
@@ -359,16 +386,16 @@ body {
 }
 
 :root.light .bg-brand-surface\/95 {
-  background-color: rgba(255, 251, 245, 0.95) !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
 }
 
 :root.light .bg-brand-surface\/98 {
-  background-color: rgba(255, 251, 245, 0.98) !important;
+  background-color: rgba(255, 255, 255, 0.98) !important;
 }
 
 :root.light #floating-navbar .glass-container {
-  background: rgba(255, 250, 243, 0.74) !important;
-  border-color: rgba(148, 163, 184, 0.18) !important;
+  background: rgba(255, 255, 255, 0.74) !important;
+  border-color: rgba(100, 116, 139, 0.16) !important;
 }
 
 :root.light #floating-navbar .bg-white\/10 {
@@ -390,18 +417,91 @@ body {
 }
 
 :root.light .placeholder-white\/30::placeholder {
-  color: rgba(83, 98, 118, 0.55) !important;
+  color: rgba(100, 116, 139, 0.56) !important;
+}
+
+:root.light .placeholder-white\/45::placeholder {
+  color: rgba(100, 116, 139, 0.68) !important;
+}
+
+:root.light .text-cyan-100,
+:root.light .text-cyan-200,
+:root.light .text-cyan-300 {
+  color: #0e7490 !important;
+}
+
+:root.light .text-sky-300,
+:root.light .text-sky-400 {
+  color: #0369a1 !important;
+}
+
+:root.light .text-blue-300,
+:root.light .text-blue-400 {
+  color: #1d4ed8 !important;
 }
 
 :root.light .text-indigo-200 {
   color: #4338ca !important;
 }
 
+:root.light .text-indigo-300,
+:root.light .text-indigo-400 {
+  color: #4f46e5 !important;
+}
+
+:root.light .text-purple-300,
+:root.light .text-purple-400,
+:root.light .text-violet-300,
+:root.light .text-violet-400 {
+  color: #7e22ce !important;
+}
+
+:root.light .text-emerald-300,
+:root.light .text-emerald-400,
+:root.light .text-green-400 {
+  color: #047857 !important;
+}
+
+:root.light .text-amber-300,
+:root.light .text-amber-400,
+:root.light .text-yellow-400 {
+  color: #b45309 !important;
+}
+
+:root.light .text-rose-200,
+:root.light .text-rose-300,
+:root.light .text-rose-400 {
+  color: #be123c !important;
+}
+
 :root.light .shadow-md,
 :root.light .shadow-lg,
 :root.light .shadow-xl,
 :root.light .shadow-2xl {
-  box-shadow: 0 18px 45px rgba(169, 140, 99, 0.12) !important;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.1) !important;
+}
+
+:root.light .bg-indigo-600.text-white,
+:root.light .bg-indigo-500.text-white,
+:root.light .bg-cyan-600.text-white,
+:root.light .bg-cyan-500.text-white,
+:root.light .bg-emerald-500.text-white,
+:root.light .from-indigo-600.to-indigo-900,
+:root.light .from-indigo-600.to-indigo-900 .text-white,
+:root.light .from-indigo-600.to-indigo-900 .text-white\/10,
+:root.light .from-indigo-600.to-indigo-900 .text-indigo-200,
+:root.light .from-indigo-600.to-indigo-900 .text-indigo-300,
+:root.light .chat-message-card--user,
+:root.light .chat-message-card--user .chat-message-paragraph {
+  color: #ffffff !important;
+}
+
+:root.light .bg-indigo-600 .text-white,
+:root.light .bg-cyan-600 .text-white,
+:root.light .bg-indigo-500 .text-white,
+:root.light .bg-cyan-500 .text-white,
+:root.light .bg-emerald-500 .text-white {
+  color: #ffffff !important;
 }
 
 ::-webkit-scrollbar {
@@ -423,7 +523,7 @@ body {
 }
 
 :root.light ::-webkit-scrollbar-track {
-  background: rgba(229, 221, 207, 0.65);
+  background: rgba(226, 232, 240, 0.74);
 }
 
 :root.light ::-webkit-scrollbar-thumb {
@@ -1325,22 +1425,76 @@ html {
 @media (max-width: 899px) {
   .journey-map-grid {
     --journey-gap: 0.85rem;
+    flex-direction: column;
+    gap: var(--journey-gap);
     padding: 0.55rem 0.1rem 0.85rem;
-  }
-
-  .journey-node__card {
-    padding: 1rem;
+    overflow-x: visible;
+    overflow-y: visible;
+    scroll-snap-type: none;
   }
 
   .journey-node {
-    flex-basis: min(82vw, 15.5rem);
-    min-height: 15.8rem;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    grid-template-rows: auto;
+    column-gap: 0.85rem;
+    flex: none;
+    width: 100%;
+    min-height: 0;
+    scroll-snap-align: none;
+  }
+
+  .journey-node__rail {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: stretch;
+    min-height: 100%;
+    padding-top: 1.2rem;
+  }
+
+  .journey-node__rail::before,
+  .journey-node--lower .journey-node__rail::before,
+  .journey-node:hover .journey-node__rail::before,
+  .journey-node:focus-visible .journey-node__rail::before,
+  .journey-node.is-active .journey-node__rail::before,
+  .journey-node--lower:hover .journey-node__rail::before,
+  .journey-node--lower:focus-visible .journey-node__rail::before,
+  .journey-node--lower.is-active .journey-node__rail::before {
+    top: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(129, 140, 248, 0.12) 0%, rgba(56, 189, 248, 0.42) 100%);
+  }
+
+  .journey-node__line {
+    left: 50%;
+    top: 1.7rem;
+    width: 2px;
+    height: calc(100% + var(--journey-gap));
+    transform: translateX(-50%);
+    background: linear-gradient(180deg, rgba(129, 140, 248, 0.86) 0%, rgba(56, 189, 248, 0.3) 100%);
+  }
+
+  .journey-node__card {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: stretch;
+    min-height: 0;
+    padding: 1rem;
+  }
+
+  .journey-node--lower .journey-node__card {
+    grid-row: 1;
+    align-self: stretch;
+    margin-top: 0;
+  }
+
+  .journey-node__popover {
+    display: none;
   }
 
   .journey-node.is-active .journey-node__card,
   .journey-node:hover .journey-node__card,
   .journey-node:focus-visible .journey-node__card {
-    transform: translateY(-2px);
+    transform: translateX(2px);
   }
 }
 
