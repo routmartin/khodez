@@ -71,6 +71,28 @@ export default defineComponent({
     let sectionObserver: IntersectionObserver | undefined;
     let typingTimeout: number | undefined;
 
+    const closeActiveDialog = () => {
+      if (selectedExperienceDialogId.value) {
+        selectedExperienceDialogId.value = null;
+        return;
+      }
+
+      if (selectedProjectId.value) {
+        selectedProjectId.value = null;
+        return;
+      }
+
+      if (selectedArticleId.value) {
+        selectedArticleId.value = null;
+      }
+    };
+
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closeActiveDialog();
+      }
+    };
+
     watch(
       theme,
       (nextTheme) => {
@@ -88,6 +110,8 @@ export default defineComponent({
     });
 
     onMounted(() => {
+      window.addEventListener("keydown", handleEscapeKey);
+
       const prefersReducedMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
       ).matches;
@@ -190,6 +214,7 @@ export default defineComponent({
     });
 
     onBeforeUnmount(() => {
+      window.removeEventListener("keydown", handleEscapeKey);
       revealObserver?.disconnect();
       sectionObserver?.disconnect();
       if (typingTimeout) {
@@ -625,9 +650,10 @@ export default defineComponent({
                       onClick={() => {
                         selectedExperienceDialogId.value = null;
                       }}
-                      class="shrink-0 rounded-lg border border-white/5 bg-white/5 px-4 py-2.5 font-mono text-base text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+                      class="shrink-0 rounded-md border border-white/10 bg-white/5 px-2.5 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-white/60 shadow-sm transition-colors hover:bg-white/10 hover:text-white"
+                      aria-label="Close experience dialog with Escape"
                     >
-                      Close
+                      Esc
                     </button>
                   </div>
 
@@ -1072,9 +1098,10 @@ export default defineComponent({
                       onClick={() => {
                         selectedProjectId.value = null;
                       }}
-                      class="shrink-0 rounded-lg border border-white/5 bg-white/5 px-4 py-2.5 font-mono text-base text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+                      class="shrink-0 rounded-md border border-white/10 bg-white/5 px-2.5 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-white/60 shadow-sm transition-colors hover:bg-white/10 hover:text-white"
+                      aria-label="Close project dialog with Escape"
                     >
-                      Close
+                      Esc
                     </button>
                   </div>
 
@@ -1341,9 +1368,10 @@ export default defineComponent({
                       onClick={() => {
                         selectedArticleId.value = null;
                       }}
-                      class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 rounded-full text-white font-semibold cursor-pointer"
+                      class="rounded-md border border-white/10 bg-white/5 px-2.5 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-white/70 shadow-sm transition-colors hover:bg-white/10 hover:text-white cursor-pointer"
+                      aria-label="Close article reader with Escape"
                     >
-                      Close Reader
+                      Esc
                     </button>
                   </div>
                 </div>

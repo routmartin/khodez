@@ -1,11 +1,10 @@
-import { defineComponent, nextTick, ref, watch } from "vue";
+import { defineComponent, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import {
   Loader2,
   MessageSquare,
   Send,
   Sparkles,
   User,
-  X,
 } from "lucide-vue-next";
 import type { Message } from "../types";
 
@@ -157,6 +156,20 @@ export const AIChatBot = defineComponent({
       },
     );
 
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && isOpen.value) {
+        isOpen.value = false;
+      }
+    };
+
+    onMounted(() => {
+      window.addEventListener("keydown", handleEscapeKey);
+    });
+
+    onBeforeUnmount(() => {
+      window.removeEventListener("keydown", handleEscapeKey);
+    });
+
     const handleSendMessage = async (text: string) => {
       if (!text.trim() || isLoading.value) return;
 
@@ -272,10 +285,10 @@ export const AIChatBot = defineComponent({
                   onClick={() => {
                     isOpen.value = false;
                   }}
-                  class="motion-soft-lift shrink-0 rounded-xl border border-white/5 bg-white/5 p-2 text-white/50 transition-colors hover:bg-white/10 hover:text-white"
-                  aria-label="Close AI chat dialog"
+                  class="motion-soft-lift shrink-0 rounded-md border border-white/10 bg-white/5 px-2.5 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-white/60 shadow-sm transition-colors hover:bg-white/10 hover:text-white"
+                  aria-label="Close AI chat dialog with Escape"
                 >
-                  <X class="h-4.5 w-4.5" />
+                  Esc
                 </button>
               </div>
             </div>
