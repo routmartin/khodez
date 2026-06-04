@@ -10,6 +10,7 @@ import {
   ArrowRight,
   BookOpen,
   Check,
+  ChevronLeft,
   ChevronRight,
   Copy,
   Cpu,
@@ -36,7 +37,7 @@ import {
   articles,
   articleContents,
 } from "./data";
-import type { Experience, Project } from "./types";
+import type { Project } from "./types";
 
 export default defineComponent({
   name: "App",
@@ -51,10 +52,12 @@ export default defineComponent({
     const copiedPhone = ref(false);
     const selectedArticleId = ref<string | null>(null);
     const selectedProjectId = ref<string | null>(null);
+    const selectedExperienceDialogId = ref<string | null>(null);
     const selectedExpId = ref("exp1");
+    const activeExpertiseIndex = ref(0);
     const scrollPercent = ref(0);
     const typedRoles = [
-      "Hi, I’m Rout Martin — I turn coffee, bugs, and business ideas into apps that work in production, not only in screenshots.",
+      "Hello, my name is Rout Martin.",
     ];
     const typedRole = ref(typedRoles[0]);
     const observedSectionIds = [
@@ -198,6 +201,26 @@ export default defineComponent({
       theme.value = theme.value === "dark" ? "light" : "dark";
     };
 
+    const setActiveExpertise = (index: number) => {
+      const itemCount = 4;
+      activeExpertiseIndex.value = (index + itemCount) % itemCount;
+    };
+
+    const getExpertiseSliderOffset = (index: number, itemCount: number) => {
+      let offset = index - activeExpertiseIndex.value;
+      const half = Math.floor(itemCount / 2);
+
+      if (offset > half) {
+        offset -= itemCount;
+      }
+
+      if (offset < -half) {
+        offset += itemCount;
+      }
+
+      return offset;
+    };
+
     const handleCopyEmail = () => {
       navigator.clipboard.writeText("ounroutcambodia@gmail.com");
       copiedEmail.value = true;
@@ -214,12 +237,6 @@ export default defineComponent({
       }, 2000);
     };
 
-    const selectedExperience = computed<Experience>(
-      () =>
-        experiences.find(
-          (experience) => experience.id === selectedExpId.value,
-        ) || experiences[0],
-    );
     const activeArticle = computed(
       () =>
         articles.find((article) => article.id === selectedArticleId.value) ||
@@ -237,10 +254,55 @@ export default defineComponent({
     return () => {
       const article = activeArticle.value;
       const articleText = activeArticleText.value;
-      const experience = selectedExperience.value;
+      const experienceDialog =
+        experiences.find(
+          (item) => item.id === selectedExperienceDialogId.value,
+        ) || null;
       const featuredProject = projects[0];
       const secondaryProjects = projects.slice(1);
       const projectDialog = activeProject.value;
+      const expertiseCards = [
+        {
+          label: "Mobile",
+          title: "Mobile App Development",
+          description:
+            "Flutter and Dart mobile development for banking, payments, e-commerce, POS, chat, and exchange products across iOS and Android.",
+          theme: "sky",
+          badgeClass: "border-sky-400/20 bg-sky-400/10 text-sky-300",
+          iconClass: "bg-sky-500/10 border-sky-500/20 text-sky-400",
+          icon: <Smartphone class="w-6 h-6" />,
+        },
+        {
+          label: "Web",
+          title: "Laravel & Vue Web Apps",
+          description:
+            "Laravel, PHP, Vue, and TypeScript work for admin panels, dashboards, API-driven interfaces, forms, data tables, and client-facing business workflows.",
+          theme: "emerald",
+          badgeClass: "border-emerald-400/20 bg-emerald-400/10 text-emerald-300",
+          iconClass: "bg-emerald-500/10 border-emerald-500/20 text-emerald-400",
+          icon: <Database class="w-6 h-6" />,
+        },
+        {
+          label: "Payments",
+          title: "Payment Integrations",
+          description:
+            "Hands-on experience with Bakong, KHQR, local bank payments, payment PIN, biometric authentication, secure storage, and transaction state handling.",
+          theme: "violet",
+          badgeClass: "border-purple-400/20 bg-purple-400/10 text-purple-300",
+          iconClass: "bg-purple-500/10 border-purple-500/20 text-purple-400",
+          icon: <Database class="w-6 h-6" />,
+        },
+        {
+          label: "Leadership",
+          title: "Technical Leadership",
+          description:
+            "Leading mobile architecture, release readiness, localization quality, socket behavior, QA handoff, and production issue resolution for financial apps.",
+          theme: "indigo",
+          badgeClass: "border-indigo-400/20 bg-indigo-400/10 text-indigo-300",
+          iconClass: "bg-indigo-500/10 border-indigo-500/20 text-indigo-400",
+          icon: <Cpu class="w-6 h-6" />,
+        },
+      ];
       const navLinkClass = (sectionId: string) =>
         `nav-link px-4 py-1.5 rounded-full transition-all duration-300 ${
           activeSection.value === sectionId
@@ -249,7 +311,7 @@ export default defineComponent({
         }`;
 
       return (
-        <div class="min-h-screen bg-brand-bg text-gray-200 select-all selection:bg-indigo-500/30 relative overflow-hidden">
+        <div class="min-h-screen bg-brand-bg text-gray-200 selection:bg-indigo-500/30 relative overflow-hidden">
           {/* BACKGROUND GRAPHICS: Floating subtle radial background gradients to give "liquid space" depth */}
           <div class="motion-float-slow absolute top-10 left-1/4 w-[400px] h-[400px] theme-blob theme-blob-one filter blur-[100px] rounded-full pointer-events-none"></div>
           <div class="motion-float-slow motion-delay-2 absolute top-[40%] right-10 w-[500px] h-[500px] theme-blob theme-blob-two filter blur-[120px] rounded-full pointer-events-none"></div>
@@ -347,7 +409,7 @@ export default defineComponent({
           </nav>
 
           {/* 2. CORE MASTER PAGE LAYOUT CONTAINER */}
-          <main class="max-w-6xl mx-auto px-6 pt-12 pb-24 relative select-text">
+         <main class="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-10 pt-12 pb-24 relative select-text">
             {/* HERO TITLE & VISUAL SECTION */}
             <section
               id="hero"
@@ -371,7 +433,7 @@ export default defineComponent({
                   aria-label={`Current focus: ${typedRole.value || typedRoles[0]}`}
                 >
                   
-                  <span class="min-w-[16ch] sm:min-w-[22ch] text-left font-semibold text-cyan-200">
+                  <span class="min-w-[20ch] sm:min-w-[28ch] text-left font-semibold text-cyan-200">
                     {typedRole.value || typedRoles[0]}
                   </span>
                   <span class="typing-cursor" aria-hidden="true"></span>
@@ -436,7 +498,7 @@ export default defineComponent({
               </h3>
 
               <div class="space-y-6">
-                <div class="glass-container rounded-[28px] p-6 sm:p-8 journey-map-shell overflow-hidden relative">
+                <div class="glass-container rounded-[28px] p-6 sm:p-8 journey-map-shell relative">
                   <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3 mb-7">
                     <div>
                       <p class="text-sm font-mono tracking-wide text-indigo-300 uppercase">
@@ -447,9 +509,7 @@ export default defineComponent({
                         commerce, POS, and business systems.
                       </h4>
                     </div>
-                    <p class="text-sm font-mono uppercase tracking-wide text-white/40">
-                      Select a role to view the work, systems, and tools behind it.
-                    </p>
+                 
                   </div>
 
                   <div class="journey-map-grid select-none">
@@ -461,6 +521,10 @@ export default defineComponent({
                         <button
                           key={exp.id}
                           onClick={() => {
+                            selectedExpId.value = exp.id;
+                            selectedExperienceDialogId.value = exp.id;
+                          }}
+                          onMouseenter={() => {
                             selectedExpId.value = exp.id;
                           }}
                           type="button"
@@ -482,6 +546,16 @@ export default defineComponent({
                             </span>
                           </span>
 
+                          <span class="journey-node__popover" aria-hidden="true">
+                            <span class="journey-node__popover-label">
+                              {exp.company}
+                            </span>
+                          
+                            <span class="journey-node__popover-action">
+                              Click to view detail
+                            </span>
+                          </span>
+
                           <span class="journey-node__rail" aria-hidden="true">
                             <span class="journey-node__dot-wrap">
                               <span class="journey-node__dot-core"></span>
@@ -495,84 +569,126 @@ export default defineComponent({
                     })}
                   </div>
                 </div>
+              </div>
+            </section>
 
-                <div class="glass-container rounded-[24px] p-7 sm:p-8 min-h-[260px] flex flex-col justify-between relative group journey-detail-panel">
-                  <div class="absolute top-0 right-0 w-24 h-[4px] bg-gradient-to-r from-indigo-500 to-indigo-800"></div>
+            {experienceDialog ? (
+              <div
+                class="fixed inset-0 z-[220] flex items-center justify-center p-4 select-text"
+                role="alertdialog"
+                aria-modal="true"
+                aria-labelledby="experience-dialog-title"
+              >
+                <div
+                  class="absolute inset-0 bg-black/70 backdrop-blur-md"
+                  onClick={() => {
+                    selectedExperienceDialogId.value = null;
+                  }}
+                ></div>
 
-                  <div>
-                    <div class="flex flex-wrap items-start justify-between gap-3">
-                      <div>
-                        <p class="text-sm font-mono text-indigo-300 tracking-[0.18em] uppercase mb-2">
-                          Selected Route Stop
-                        </p>
-                        <h4 class="text-lg font-bold text-white font-display uppercase tracking-wide">
-                          {experience.title}
-                        </h4>
-                      </div>
-                      <span class="text-sm font-mono text-indigo-300 font-semibold uppercase journey-detail-pill">
-                        {experience.company}
-                      </span>
+                <div class="glass-container relative z-10 flex max-h-[88vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-brand-surface/98 shadow-2xl">
+                  <div class="absolute left-0 top-0 h-[4px] w-full bg-gradient-to-r from-cyan-400 via-indigo-500 to-blue-500"></div>
+
+                  <div class="flex items-start justify-between gap-4 border-b border-white/5 bg-black/10 p-6 sm:p-7">
+                    <div class="text-left">
+                      <p class="text-base font-mono font-bold uppercase tracking-wide text-cyan-300">
+                        {experienceDialog.company}
+                      </p>
+                      <h3
+                        id="experience-dialog-title"
+                        class="mt-1 font-display text-3xl font-bold leading-tight text-white"
+                      >
+                        {experienceDialog.title}
+                      </h3>
+                      <p class="mt-2 text-base font-mono uppercase tracking-wide text-white/45">
+                        {experienceDialog.duration}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        selectedExperienceDialogId.value = null;
+                      }}
+                      class="shrink-0 rounded-lg border border-white/5 bg-white/5 px-4 py-2.5 font-mono text-base text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+                    >
+                      Close
+                    </button>
+                  </div>
+
+                  <div class="grid flex-1 grid-cols-1 gap-5 overflow-y-auto p-6 sm:p-7 lg:grid-cols-[0.95fr_1.05fr]">
+                    <div class="space-y-4 text-left">
+                      {experienceDialog.summary ? (
+                        <div class="rounded-lg border border-white/5 bg-white/5 p-5">
+                          <p class="text-base font-mono uppercase tracking-wide text-indigo-300">
+                            Role Summary
+                          </p>
+                          <p class="mt-2 text-base leading-relaxed text-gray-300">
+                            {experienceDialog.summary}
+                          </p>
+                        </div>
+                      ) : null}
+
+                      {experienceDialog.focus?.length ? (
+                        <div class="rounded-lg border border-white/5 bg-white/5 p-5">
+                          <p class="text-base font-mono uppercase tracking-wide text-cyan-300">
+                            Focus Areas
+                          </p>
+                          <div class="mt-3 flex flex-wrap gap-2">
+                            {experienceDialog.focus.map((item) => (
+                              <span
+                                key={item}
+                                class="rounded-2xl border border-cyan-400/15 bg-cyan-400/10 px-3 py-1.5 text-base font-mono text-cyan-200"
+                              >
+                                {item}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ) : null}
+
+                      {experienceDialog.projects?.length ? (
+                        <div class="rounded-lg border border-white/5 bg-white/5 p-5">
+                          <p class="text-base font-mono uppercase tracking-wide text-blue-300">
+                            Built / Shipped
+                          </p>
+                          <div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                            {experienceDialog.projects.map((projectName) => (
+                              <div
+                                key={projectName}
+                                class="rounded-2xl border border-white/5 bg-white/5 px-3 py-2 text-base text-gray-300"
+                              >
+                                {projectName}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ) : null}
                     </div>
 
-                    <p class="text-sm font-mono text-white/35 tracking-wide uppercase mt-3">
-                      ACTIVE TIMEFRAME: {experience.duration}
-                    </p>
-
-                    {experience.summary ? (
-                      <p class="mt-5 max-w-4xl text-sm leading-relaxed text-gray-300">
-                        {experience.summary}
-                      </p>
-                    ) : null}
-
-                    <div class="mt-6 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-5">
-                      <div class="space-y-5">
-                        {experience.focus?.length ? (
-                          <div>
-                            <p class="text-sm font-mono tracking-wide uppercase text-cyan-300 mb-2.5">
-                              Focus Areas
-                            </p>
-                            <div class="flex flex-wrap gap-2">
-                              {experience.focus.map((item) => (
-                                <span
-                                  key={item}
-                                  class="rounded-2xl border border-cyan-400/15 bg-cyan-400/10 px-3 py-1.5 text-sm font-mono text-cyan-200"
-                                >
-                                  {item}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        ) : null}
-
-                        {experience.projects?.length ? (
-                          <div>
-                            <p class="text-sm font-mono tracking-wide uppercase text-indigo-300 mb-2.5">
-                              Built / Shipped
-                            </p>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                              {experience.projects.map((projectName) => (
-                                <div
-                                  key={projectName}
-                                  class="rounded-2xl border border-white/5 bg-white/5 px-3 py-2 text-sm text-gray-300"
-                                >
-                                  {projectName}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        ) : null}
+                    <div class="space-y-4 text-left">
+                      <div class="rounded-lg border border-white/5 bg-white/5 p-5">
+                        <p class="text-base font-mono uppercase tracking-wide text-indigo-300">
+                          Career Highlights
+                        </p>
+                        <ul class="mt-3 space-y-3 text-base leading-relaxed text-gray-300">
+                          {experienceDialog.achievements.map((ach) => (
+                            <li key={ach} class="flex gap-2.5">
+                              <span class="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-indigo-300"></span>
+                              <span>{ach}</span>
+                            </li>
+                          ))}
+                        </ul>
                       </div>
 
-                      {experience.techStack?.length ? (
-                        <div class="rounded-lg border border-white/5 bg-black/10 p-4">
-                          <p class="text-sm font-mono tracking-wide uppercase text-white/45 mb-3">
-                            Technical Stack
+                      {experienceDialog.techStack?.length ? (
+                        <div class="rounded-lg border border-white/5 bg-black/10 p-5">
+                          <p class="text-base font-mono uppercase tracking-wide text-white/45">
+                            Tools / Stack
                           </p>
-                          <div class="flex flex-wrap gap-2">
-                            {experience.techStack.map((tech) => (
+                          <div class="mt-3 flex flex-wrap gap-2">
+                            {experienceDialog.techStack.map((tech) => (
                               <span
                                 key={tech}
-                                class="rounded-2xl border border-white/5 bg-white/5 px-2.5 py-1.5 text-sm font-mono text-gray-300"
+                                class="rounded-2xl border border-white/5 bg-white/5 px-3 py-1.5 text-base font-mono text-gray-300"
                               >
                                 {tech}
                               </span>
@@ -581,170 +697,123 @@ export default defineComponent({
                         </div>
                       ) : null}
                     </div>
-
-                    <ul class="mt-6 space-y-3 font-sans text-sm text-gray-400 leading-relaxed list-none text-left">
-                      {experience.achievements.map((ach, idx) => (
-                        <li
-                          key={idx}
-                          class="flex gap-2.5 items-start journey-detail-item"
-                        >
-                          <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0 mt-2"></span>
-                          <span>{ach}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div class="mt-7 pt-4 border-t border-white/8 flex items-center justify-between gap-3 text-sm font-mono uppercase tracking-wide text-white/40">
-                    <span>Career milestones</span>
-                    <span>
-                      {experiences.findIndex(
-                        (exp) => exp.id === experience.id,
-                      ) + 1}{" "}
-                      / {experiences.length}
-                    </span>
                   </div>
                 </div>
               </div>
-            </section>
+            ) : null}
             {/* 3. CORE EXPERTISE & BENTO CHIPS SECTION */}
             <section
               id="expertise"
               class="section-anchor py-12 border-t border-white/5 select-text"
             >
-              <div
-                class="text-center max-w-3xl mx-auto mb-16 select-none reveal-on-scroll"
-                data-reveal
-              >
-                <p class="text-gray-400 mt-3 text-sm sm:text-base font-sans">
-                  Secure mobile products and practical web systems with
-                  Flutter, Laravel, Vue, payment integrations, and reliable
-                  release delivery.
-                </p>
-              </div>
 
               {/* Core expertise cards */}
               <div
-                class="grid grid-cols-1 md:grid-cols-2 gap-6 select-none reveal-on-scroll reveal-delay-1"
+                class="wallet-stack-expertise select-none reveal-on-scroll reveal-delay-1"
                 data-reveal
               >
-                {/* Card 1: Mobile */}
-                <div class="glass-container glass-container-hover rounded-2xl p-6 sm:p-7 text-left flex flex-col justify-between min-h-[300px]">
-                  <div>
-                    <div class="flex items-start justify-between gap-4">
-                      <div class="w-12 h-12 rounded-lg bg-sky-500/10 border border-sky-500/20 text-sky-400 flex items-center justify-center shadow-sm">
-                        <Smartphone class="w-6 h-6" />
-                      </div>
-                      <span class="rounded-2xl border border-sky-400/20 bg-sky-400/10 px-2.5 py-1 text-sm font-mono text-sky-300">
-                        Mobile
-                      </span>
-                    </div>
-                    <h3 class="text-2xl font-bold text-white font-display mt-6 mb-3">
-                      Mobile App Development
-                    </h3>
-                    <p class="text-base text-gray-400 leading-relaxed font-sans">
-                      Flutter and Dart mobile development for banking, payments,
-                      e-commerce, POS, chat, and exchange products across iOS
-                      and Android.
-                    </p>
-                  </div>
-                  <div class="mt-6 border-t border-white/5 pt-4">
-                    <p class="text-sm font-mono uppercase tracking-wide text-white/40">
-                      Seen in
-                    </p>
-                    <p class="mt-1 text-base font-medium text-sky-300">
-                      DV Pay / HTP / Point Food / Exchange Apps
-                    </p>
-                  </div>
+                <div class="wallet-stack-controls">
+                  {expertiseCards.map((card, index) => (
+                    <button
+                      key={card.label}
+                      type="button"
+                      onClick={() => setActiveExpertise(index)}
+                      class={`rounded-2xl border px-3 py-1.5 text-sm font-mono transition-all ${
+                        activeExpertiseIndex.value === index
+                          ? card.badgeClass
+                          : "border-white/5 bg-white/5 text-white/50 hover:bg-white/10 hover:text-white"
+                      }`}
+                    >
+                      {card.label}
+                    </button>
+                  ))}
                 </div>
 
-                {/* Card 2: Full-stack web */}
-                <div class="glass-container glass-container-hover rounded-2xl p-6 sm:p-7 text-left flex flex-col justify-between min-h-[300px]">
-                  <div>
-                    <div class="flex items-start justify-between gap-4">
-                      <div class="w-12 h-12 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center shadow-sm">
-                        <Database class="w-6 h-6" />
-                      </div>
-                      <span class="rounded-2xl border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-sm font-mono text-emerald-300">
-                        Web
-                      </span>
-                    </div>
-                    <h3 class="text-2xl font-bold text-white font-display mt-6 mb-3">
-                      Laravel & Vue Web Apps
-                    </h3>
-                    <p class="text-base text-gray-400 leading-relaxed font-sans">
-                      Laravel, PHP, Vue, and TypeScript work for admin panels,
-                      dashboards, API-driven interfaces, forms, data tables, and
-                      client-facing business workflows.
-                    </p>
-                  </div>
-                  <div class="mt-6 border-t border-white/5 pt-4">
-                    <p class="text-sm font-mono uppercase tracking-wide text-white/40">
-                      Seen in
-                    </p>
-                    <p class="mt-1 text-base font-medium text-emerald-300">
-                      Admin Panels / Dashboard UI / Business Workflows
-                    </p>
-                  </div>
-                </div>
+                <div class="wallet-stack-stage" aria-live="polite">
+                  {expertiseCards.map((card, index) => {
+                    const sliderOffset = getExpertiseSliderOffset(
+                      index,
+                      expertiseCards.length,
+                    );
+                    const offsetClass =
+                      sliderOffset < 0
+                        ? `wallet-slider-card--neg${Math.abs(sliderOffset)}`
+                        : `wallet-slider-card--${sliderOffset}`;
 
-                {/* Card 3: Payment integrations */}
-                <div class="glass-container glass-container-hover rounded-2xl p-6 sm:p-7 text-left flex flex-col justify-between min-h-[300px]">
-                  <div>
-                    <div class="flex items-start justify-between gap-4">
-                      <div class="w-12 h-12 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center shadow-sm">
-                        <Database class="w-6 h-6" />
-                      </div>
-                      <span class="rounded-2xl border border-purple-400/20 bg-purple-400/10 px-2.5 py-1 text-sm font-mono text-purple-300">
-                        Payments
-                      </span>
-                    </div>
-                    <h3 class="text-2xl font-bold text-white font-display mt-6 mb-3">
-                      Payment Integrations
-                    </h3>
-                    <p class="text-base text-gray-400 leading-relaxed font-sans">
-                      Hands-on experience with Bakong, KHQR, local bank
-                      payments, payment PIN, biometric authentication, secure
-                      storage, and transaction state handling.
-                    </p>
-                  </div>
-                  <div class="mt-6 border-t border-white/5 pt-4">
-                    <p class="text-sm font-mono uppercase tracking-wide text-white/40">
-                      Seen in
-                    </p>
-                    <p class="mt-1 text-base font-medium text-purple-300">
-                      DV Pay / HTP / KOFI / KONFULON
-                    </p>
-                  </div>
-                </div>
-
-                {/* Card 4: Tech Leadership */}
-                <div class="glass-container glass-container-hover rounded-2xl p-6 sm:p-7 text-left flex flex-col justify-between min-h-[300px]">
-                  <div>
-                    <div class="flex items-start justify-between gap-4">
-                      <div class="w-12 h-12 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center shadow-sm">
-                        <Cpu class="w-6 h-6" />
-                      </div>
-                      <span class="rounded-2xl border border-indigo-400/20 bg-indigo-400/10 px-2.5 py-1 text-sm font-mono text-indigo-300">
-                        Delivery
-                      </span>
-                    </div>
-                    <h3 class="text-2xl font-bold text-white font-display mt-6 mb-3">
-                      Technical Leadership
-                    </h3>
-                    <p class="text-base text-gray-400 leading-relaxed font-sans">
-                      Leading mobile architecture, release readiness,
-                      localization quality, socket behavior, QA handoff, and
-                      production issue resolution for financial apps.
-                    </p>
-                  </div>
-                  <div class="mt-6 border-t border-white/5 pt-4">
-                    <p class="text-sm font-mono uppercase tracking-wide text-white/40">
-                      Seen in
-                    </p>
-                    <p class="mt-1 text-base font-medium text-indigo-300">
-                      Release Builds / QA Handoff / Production Fixes
-                    </p>
+                    return (
+                      <button
+                        key={card.label}
+                        type="button"
+                        onClick={() => setActiveExpertise(index)}
+                        class={`wallet-stack-card wallet-expertise-card--${card.theme} ${offsetClass} glass-container text-left ${
+                          sliderOffset === 0 ? "is-active" : ""
+                        }`}
+                        aria-label={`View ${card.title}`}
+                      >
+                        <div class="wallet-stack-card__content">
+                          <div class="flex items-start justify-between gap-4">
+                            <div
+                              class={`wallet-stack-card__icon ${card.iconClass}`}
+                            >
+                              {card.icon}
+                            </div>
+                            <span
+                              class={`rounded-2xl border px-2.5 py-1 text-sm font-mono ${card.badgeClass}`}
+                            >
+                              {card.label}
+                            </span>
+                          </div>
+                          <div>
+                            <h3 class="font-display text-2xl font-bold text-white sm:text-3xl">
+                              {card.title}
+                            </h3>
+                            <p class="mt-4 text-base leading-relaxed text-gray-300">
+                              {card.description}
+                            </p>
+                          </div>
+                          <div class="flex items-center justify-between border-t border-white/5 pt-4 font-mono text-xs uppercase tracking-wide text-white/40">
+                            <span>
+                              {String(index + 1).padStart(2, "0")} /{" "}
+                              {String(expertiseCards.length).padStart(2, "0")}
+                            </span>
+                            <span>Click to rotate</span>
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                  <button
+                    type="button"
+                    class="wallet-slider-arrow wallet-slider-arrow--prev"
+                    onClick={() =>
+                      setActiveExpertise(activeExpertiseIndex.value - 1)
+                    }
+                    aria-label="Previous expertise"
+                  >
+                    <ChevronLeft class="h-6 w-6" />
+                  </button>
+                  <button
+                    type="button"
+                    class="wallet-slider-arrow wallet-slider-arrow--next"
+                    onClick={() =>
+                      setActiveExpertise(activeExpertiseIndex.value + 1)
+                    }
+                    aria-label="Next expertise"
+                  >
+                    <ChevronRight class="h-6 w-6" />
+                  </button>
+                  <div class="wallet-stack-dots">
+                    {expertiseCards.map((card, index) => (
+                      <button
+                        key={card.label}
+                        type="button"
+                        onClick={() => setActiveExpertise(index)}
+                        class={`wallet-stack-dot ${
+                          activeExpertiseIndex.value === index ? "is-active" : ""
+                        }`}
+                        aria-label={`Show ${card.label}`}
+                      ></button>
+                    ))}
                   </div>
                 </div>
               </div>

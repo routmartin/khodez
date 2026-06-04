@@ -290,7 +290,7 @@ export const experiences: Experience[] = [
     company: "AIBODIA TECHNOLOGY CO., LTD",
     duration: "Recent",
     summary:
-      "Led production Flutter fintech apps across digital banking, card services, payments, KYC, localization, real-time communication, and iOS/Android release delivery.",
+      "Lead production Flutter fintech apps across digital banking, card services, payments, KYC, localization, real-time communication, and iOS/Android release delivery.",
     focus: [
       "Digital banking",
       "Payments",
