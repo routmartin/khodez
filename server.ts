@@ -75,7 +75,7 @@ Context / Experience:
 - HTP: Financial app covering card services, top-up payments, QR transfers, KYC, favorites, profile, notifications, payment countdown, top-up history, card limits, release preparation, and production support.
 - DR Tech Co., Ltd, Senior Flutter Developer: Worked on chat, customer service audio calls, stock exchange, and coin exchange platforms with real-time user experiences and transaction journeys.
 - IG International Group, Flutter Developer / Vue Developer: Built KOFI and KONFULON e-commerce apps and inventory products with product listings, checkout, favorites, promotions, payment integrations, staging and production deployments, and client requirement delivery.
-- SoftPoint AutoID, Flutter Developer: Built Point Restaurant App, Food Court, Point Food, POS workflows, testing, deployment, and food-service business flows.
+- SoftPoint AutoID, Flutter Developer: Built Restaurant App, Food Delivery App, Internal Food Court App, POS workflows, testing, deployment, and food-service business flows.
 - Digitalsky Multimedia / OneTV, Software Developer: Built MOI New Cambodia, Document Management System, Online Training App/System for HR, and maintained business systems.
 - Cambodian Context: Enthusiastic about practical mobile engineering, reliable financial workflows, localization quality, and knowledge sharing for Cambodian developers.
 

@@ -39,6 +39,8 @@ import {
 } from "./data";
 import type { Project } from "./types";
 
+const profilePhotoSrc = "/assets/profile-photo.jpg";
+
 export default defineComponent({
   name: "App",
   setup() {
@@ -53,12 +55,12 @@ export default defineComponent({
     const selectedArticleId = ref<string | null>(null);
     const selectedProjectId = ref<string | null>(null);
     const selectedExperienceDialogId = ref<string | null>(null);
+    const isProfilePhotoOpen = ref(false);
+    const hasProfilePhoto = ref(true);
     const selectedExpId = ref("exp1");
     const activeExpertiseIndex = ref(0);
     const scrollPercent = ref(0);
-    const typedRoles = [
-      "Hello, my name is Rout Martin.",
-    ];
+    const typedRoles = ["Hello, my name is Rout Martin."];
     const typedRole = ref(typedRoles[0]);
     const observedSectionIds = [
       "hero",
@@ -72,6 +74,11 @@ export default defineComponent({
     let typingTimeout: number | undefined;
 
     const closeActiveDialog = () => {
+      if (isProfilePhotoOpen.value) {
+        isProfilePhotoOpen.value = false;
+        return;
+      }
+
       if (selectedExperienceDialogId.value) {
         selectedExperienceDialogId.value = null;
         return;
@@ -136,8 +143,8 @@ export default defineComponent({
             });
           },
           {
-            threshold: 0.16,
-            rootMargin: "0px 0px -12% 0px",
+            threshold: 0.08,
+            rootMargin: "0px 0px -4% 0px",
           },
         );
 
@@ -200,8 +207,8 @@ export default defineComponent({
           activeSection.value = visibleEntries[0].target.id;
         },
         {
-          threshold: [0.2, 0.35, 0.5, 0.7],
-          rootMargin: "-20% 0px -45% 0px",
+          threshold: [0.08, 0.22, 0.38, 0.55],
+          rootMargin: "-12% 0px -36% 0px",
         },
       );
 
@@ -292,7 +299,8 @@ export default defineComponent({
         hash |= 0;
       }
       return {
-        "--chip-accent": usedInChipAccents[Math.abs(hash) % usedInChipAccents.length],
+        "--chip-accent":
+          usedInChipAccents[Math.abs(hash) % usedInChipAccents.length],
       } as Record<string, string>;
     };
 
@@ -323,7 +331,8 @@ export default defineComponent({
           description:
             "Laravel, PHP, Vue, and TypeScript work for admin panels, dashboards, API-driven interfaces, forms, data tables, and client-facing business workflows.",
           theme: "emerald",
-          badgeClass: "border-emerald-400/20 bg-emerald-400/10 text-emerald-300",
+          badgeClass:
+            "border-emerald-400/20 bg-emerald-400/10 text-emerald-300",
           iconClass: "bg-emerald-500/10 border-emerald-500/20 text-emerald-400",
           icon: <Database class="w-6 h-6" />,
         },
@@ -356,30 +365,41 @@ export default defineComponent({
         }`;
 
       return (
-        <div class="min-h-screen bg-brand-bg text-gray-200 selection:bg-indigo-500/30 relative overflow-hidden">
+        <div class="min-h-screen bg-brand-bg text-gray-200 selection:bg-indigo-500/30 relative overflow-x-hidden">
           {/* BACKGROUND GRAPHICS: Floating subtle radial background gradients to give "liquid space" depth */}
-          <div class="motion-float-slow absolute top-10 left-1/4 w-[400px] h-[400px] theme-blob theme-blob-one filter blur-[100px] rounded-full pointer-events-none"></div>
-          <div class="motion-float-slow motion-delay-2 absolute top-[40%] right-10 w-[500px] h-[500px] theme-blob theme-blob-two filter blur-[120px] rounded-full pointer-events-none"></div>
-          <div class="motion-float-slow motion-delay-3 absolute bottom-20 left-10 w-[450px] h-[450px] theme-blob theme-blob-three filter blur-[110px] rounded-full pointer-events-none"></div>
+          <div class="motion-float-slow absolute top-10 left-1/4 h-[320px] w-[320px] rounded-full theme-blob theme-blob-one blur-[72px] pointer-events-none"></div>
+          <div class="motion-float-slow motion-delay-2 absolute top-[40%] right-10 h-[360px] w-[360px] rounded-full theme-blob theme-blob-two blur-[82px] pointer-events-none"></div>
+          <div class="motion-float-slow motion-delay-3 absolute bottom-20 left-10 h-[340px] w-[340px] rounded-full theme-blob theme-blob-three blur-[78px] pointer-events-none"></div>
 
           {/* 1. STICKY GLASS NAVIGATION BAR */}
           <nav
             id="floating-navbar"
             class="sticky top-4 z-40 max-w-5xl mx-auto px-4 mt-4 select-none"
           >
-            <div class="glass-container nav-shell rounded-full px-6 py-3 flex items-center justify-between gap-4 shadow-xl">
-              {/* Logo brand */}
-              <a
-                href="#hero"
+            <div class="glass-container nav-shell  rounded-full px-6 py-3 flex items-center justify-between gap-4 shadow-xl">
+              {/* Profile brand */}
+              <button
+                type="button"
                 onClick={() => {
-                  activeSection.value = "hero";
+                  isProfilePhotoOpen.value = true;
                 }}
-                class="flex items-center gap-2 group"
+                class="profile-nav-button motion-soft-lift "
+                aria-label="View Rout Martin profile photo"
+                title="View profile photo"
               >
-                <span class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center font-bold text-white text-sm shadow-md shadow-indigo-500/20">
-                  R
-                </span>
-              </a>
+                {hasProfilePhoto.value ? (
+                  <img
+                    src={profilePhotoSrc}
+                    alt="Rout Martin"
+                    class="profile-nav-photo"
+                    onError={() => {
+                      hasProfilePhoto.value = false;
+                    }}
+                  />
+                ) : (
+                  <span class="profile-nav-fallback">R</span>
+                )}
+              </button>
 
               {/* Nav Items */}
               <div class="hidden md:flex items-center gap-1.5 font-mono text-xs">
@@ -453,8 +473,53 @@ export default defineComponent({
             </div>
           </nav>
 
+          {isProfilePhotoOpen.value ? (
+            <div
+              class="fixed inset-0 z-[240] flex items-center justify-center p-4 select-none"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Rout Martin profile photo"
+            >
+              <button
+                type="button"
+                class="absolute inset-0 bg-black/78 backdrop-blur-lg"
+                onClick={() => {
+                  isProfilePhotoOpen.value = false;
+                }}
+                aria-label="Close profile photo viewer"
+              ></button>
+
+              <div class="profile-photo-viewer relative z-10">
+                {hasProfilePhoto.value ? (
+                  <img
+                    src={profilePhotoSrc}
+                    alt="Rout Martin profile portrait"
+                    class="profile-photo-viewer__image"
+                    onError={() => {
+                      hasProfilePhoto.value = false;
+                    }}
+                  />
+                ) : (
+                  <div class="profile-photo-viewer__fallback">
+                    <span>R</span>
+                  </div>
+                )}
+                <button
+                  type="button"
+                  onClick={() => {
+                    isProfilePhotoOpen.value = false;
+                  }}
+                  class="profile-photo-viewer__close"
+                  aria-label="Close profile photo viewer with Escape"
+                >
+                  Esc
+                </button>
+              </div>
+            </div>
+          ) : null}
+
           {/* 2. CORE MASTER PAGE LAYOUT CONTAINER */}
-         <main class="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-10 pt-12 pb-24 relative select-text">
+          <main class="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-10 pt-12 pb-24 relative select-text">
             {/* HERO TITLE & VISUAL SECTION */}
             <section
               id="hero"
@@ -464,33 +529,32 @@ export default defineComponent({
                 class="max-w-3xl flex flex-col items-center gap-5 reveal-on-scroll reveal-delay-1"
                 data-reveal
               >
-             
 
+                <div
+                  class="typing-role inline-flex items-center font-mono text-sm sm:text-base text-cyan-300 select-none"
+                  aria-label={`Current focus: ${typedRole.value || typedRoles[0]}`}
+                >
+                  <span class="inline-flex items-center font-semibold text-cyan-200">
+                    <span>{typedRole.value || typedRoles[0]}</span>
+                    <span class="typing-cursor ml-1" aria-hidden="true"></span>
+                  </span>
+                </div>
+
+                
                 <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-tight">
-                  Mobile Team Lead & Full Stack Web <br class="hidden sm:inline" />
+                  Mobile Team Lead & Full Stack Web{" "}
+                  <br class="hidden sm:inline" />
                   <span class="bg-gradient-to-r from-blue-400 via-indigo-200 to-indigo-400 bg-clip-text text-transparent">
                     with Laravel & Vue
                   </span>
                 </h1>
-  <div
-                  class="typing-role min-h-[32px] inline-flex items-center justify-center gap-2 rounded-2xl border border-cyan-400/10 bg-cyan-400/5 px-4 py-1.5 font-mono text-sm sm:text-base text-cyan-300 select-none"
-                  aria-label={`Current focus: ${typedRole.value || typedRoles[0]}`}
-                >
-                  
-                  <span class="min-w-[20ch] sm:min-w-[28ch] text-left font-semibold text-cyan-200">
-                    {typedRole.value || typedRoles[0]}
-                  </span>
-                  <span class="typing-cursor" aria-hidden="true"></span>
-                </div>
+          
                 {/* Subheading text with wide margins for air */}
                 <p class="text-gray-400 text-base sm:text-lg max-w-2xl leading-relaxed font-sans">
-                  I build production Flutter mobile apps and full stack web
-                  systems for digital banking, payments, KYC, card services,
-                  e-commerce, POS, and exchange platforms.
+                  I turn ☕ coffee, 🐞 bugs, and 💡 business ideas into production-ready mobile apps and web systems — from digital banking, payment integrations, KYC, VISA card services, e-commerce, POS, and exchange platforms to livestreaming, voice calls, real-time chat, and reusable package development.
                 </p>
 
-                   {/* Soft display tag */}
-      
+                {/* Soft display tag */}
 
                 {/* Action Buttons rows */}
                 <div class="flex flex-wrap items-center justify-center gap-3.5 mt-2 select-none">
@@ -551,7 +615,6 @@ export default defineComponent({
                         commerce, POS, and business systems.
                       </h4>
                     </div>
-                 
                   </div>
 
                   <div class="journey-map-grid select-none">
@@ -588,11 +651,14 @@ export default defineComponent({
                             </span>
                           </span>
 
-                          <span class="journey-node__popover" aria-hidden="true">
+                          <span
+                            class="journey-node__popover"
+                            aria-hidden="true"
+                          >
                             <span class="journey-node__popover-label">
                               {exp.company}
                             </span>
-                          
+
                             <span class="journey-node__popover-action">
                               Click to view detail
                             </span>
@@ -749,13 +815,12 @@ export default defineComponent({
               id="expertise"
               class="section-anchor py-12 border-t border-white/5 select-text"
             >
-
-                 {/* Skill matrix block */}
+              {/* Skill matrix block */}
               <div
                 class=" text-left reveal-on-scroll reveal-delay-2"
                 data-reveal
               >
-              <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between mb-8">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between mb-8">
                   <div>
                     <p class="text-sm font-mono uppercase tracking-wide text-indigo-300">
                       Skill Matrix
@@ -767,103 +832,103 @@ export default defineComponent({
                       Practical skills by product area
                     </h4>
                   </div>
-                 
                 </div>
 
-              {/* Core expertise cards */}
-              <div
-                class="wallet-stack-expertise select-none reveal-on-scroll reveal-delay-1"
-                data-reveal
-              >
-        
-                <div class="wallet-stack-stage" aria-live="polite">
-                  {expertiseCards.map((card, index) => {
-                    const sliderOffset = getExpertiseSliderOffset(
-                      index,
-                      expertiseCards.length,
-                    );
-                    const offsetClass =
-                      sliderOffset < 0
-                        ? `wallet-slider-card--neg${Math.abs(sliderOffset)}`
-                        : `wallet-slider-card--${sliderOffset}`;
+                {/* Core expertise cards */}
+                <div
+                  class="wallet-stack-expertise select-none reveal-on-scroll reveal-delay-1"
+                  data-reveal
+                >
+                  <div class="wallet-stack-stage" aria-live="polite">
+                    {expertiseCards.map((card, index) => {
+                      const sliderOffset = getExpertiseSliderOffset(
+                        index,
+                        expertiseCards.length,
+                      );
+                      const offsetClass =
+                        sliderOffset < 0
+                          ? `wallet-slider-card--neg${Math.abs(sliderOffset)}`
+                          : `wallet-slider-card--${sliderOffset}`;
 
-                    return (
-                      <button
-                        key={card.label}
-                        type="button"
-                        onClick={() => setActiveExpertise(index)}
-                        class={`wallet-stack-card wallet-expertise-card--${card.theme} ${offsetClass} glass-container text-left ${
-                          sliderOffset === 0 ? "is-active" : ""
-                        }`}
-                        aria-label={`View ${card.title}`}
-                      >
-                        <div class="wallet-stack-card__content">
-                          <div class="flex items-start justify-between gap-4">
-                            <div
-                              class={`wallet-stack-card__icon ${card.iconClass}`}
-                            >
-                              {card.icon}
+                      return (
+                        <button
+                          key={card.label}
+                          type="button"
+                          onClick={() => setActiveExpertise(index)}
+                          class={`wallet-stack-card wallet-expertise-card--${card.theme} ${offsetClass} glass-container text-left ${
+                            sliderOffset === 0 ? "is-active" : ""
+                          }`}
+                          aria-label={`View ${card.title}`}
+                        >
+                          <div class="wallet-stack-card__content">
+                            <div class="flex items-start justify-between gap-4">
+                              <div
+                                class={`wallet-stack-card__icon ${card.iconClass}`}
+                              >
+                                {card.icon}
+                              </div>
+                              <span
+                                class={`rounded-2xl border px-2.5 py-1 text-sm font-mono ${card.badgeClass}`}
+                              >
+                                {card.label}
+                              </span>
                             </div>
-                            <span
-                              class={`rounded-2xl border px-2.5 py-1 text-sm font-mono ${card.badgeClass}`}
-                            >
-                              {card.label}
-                            </span>
+                            <div>
+                              <h3 class="font-display text-2xl font-bold text-white sm:text-3xl">
+                                {card.title}
+                              </h3>
+                              <p class="mt-4 text-base leading-relaxed text-gray-300">
+                                {card.description}
+                              </p>
+                            </div>
+                            <div class="flex items-center justify-between border-t border-white/5 pt-4 font-mono text-xs uppercase tracking-wide text-white/40">
+                              <span>
+                                {String(index + 1).padStart(2, "0")} /{" "}
+                                {String(expertiseCards.length).padStart(2, "0")}
+                              </span>
+                              <span>Click to rotate</span>
+                            </div>
                           </div>
-                          <div>
-                            <h3 class="font-display text-2xl font-bold text-white sm:text-3xl">
-                              {card.title}
-                            </h3>
-                            <p class="mt-4 text-base leading-relaxed text-gray-300">
-                              {card.description}
-                            </p>
-                          </div>
-                          <div class="flex items-center justify-between border-t border-white/5 pt-4 font-mono text-xs uppercase tracking-wide text-white/40">
-                            <span>
-                              {String(index + 1).padStart(2, "0")} /{" "}
-                              {String(expertiseCards.length).padStart(2, "0")}
-                            </span>
-                            <span>Click to rotate</span>
-                          </div>
-                        </div>
-                      </button>
-                    );
-                  })}
-                  <button
-                    type="button"
-                    class="wallet-slider-arrow wallet-slider-arrow--prev"
-                    onClick={() =>
-                      setActiveExpertise(activeExpertiseIndex.value - 1)
-                    }
-                    aria-label="Previous expertise"
-                  >
-                    <ChevronLeft class="h-6 w-6" />
-                  </button>
-                  <button
-                    type="button"
-                    class="wallet-slider-arrow wallet-slider-arrow--next"
-                    onClick={() =>
-                      setActiveExpertise(activeExpertiseIndex.value + 1)
-                    }
-                    aria-label="Next expertise"
-                  >
-                    <ChevronRight class="h-6 w-6" />
-                  </button>
-                  <div class="wallet-stack-dots">
-                    {expertiseCards.map((card, index) => (
-                      <button
-                        key={card.label}
-                        type="button"
-                        onClick={() => setActiveExpertise(index)}
-                        class={`wallet-stack-dot ${
-                          activeExpertiseIndex.value === index ? "is-active" : ""
-                        }`}
-                        aria-label={`Show ${card.label}`}
-                      ></button>
-                    ))}
+                        </button>
+                      );
+                    })}
+                    <button
+                      type="button"
+                      class="wallet-slider-arrow wallet-slider-arrow--prev"
+                      onClick={() =>
+                        setActiveExpertise(activeExpertiseIndex.value - 1)
+                      }
+                      aria-label="Previous expertise"
+                    >
+                      <ChevronLeft class="h-6 w-6" />
+                    </button>
+                    <button
+                      type="button"
+                      class="wallet-slider-arrow wallet-slider-arrow--next"
+                      onClick={() =>
+                        setActiveExpertise(activeExpertiseIndex.value + 1)
+                      }
+                      aria-label="Next expertise"
+                    >
+                      <ChevronRight class="h-6 w-6" />
+                    </button>
+                    <div class="wallet-stack-dots">
+                      {expertiseCards.map((card, index) => (
+                        <button
+                          key={card.label}
+                          type="button"
+                          onClick={() => setActiveExpertise(index)}
+                          class={`wallet-stack-dot ${
+                            activeExpertiseIndex.value === index
+                              ? "is-active"
+                              : ""
+                          }`}
+                          aria-label={`Show ${card.label}`}
+                        ></button>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
 
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                   {skillCategories.map((sc, idx) => (
@@ -914,7 +979,7 @@ export default defineComponent({
                           <p class="mb-2 text-sm font-mono uppercase tracking-wide text-white pb-2">
                             Used in projects like
                           </p>
-                            <div class="flex flex-wrap gap-2">
+                          <div class="flex flex-wrap gap-2">
                             {sc.usedIn.map((item, itemIdx) => (
                               <span
                                 key={item}
@@ -1167,12 +1232,14 @@ export default defineComponent({
                               Technical
                             </p>
                             <ul class="mt-2 space-y-2 text-base text-gray-300">
-                              {projectDialog.technicalHighlights.map((highlight) => (
-                                <li key={highlight} class="flex gap-2">
-                                  <span class="mt-2 h-1 w-1 shrink-0 rounded-full bg-blue-300"></span>
-                                  <span>{highlight}</span>
-                                </li>
-                              ))}
+                              {projectDialog.technicalHighlights.map(
+                                (highlight) => (
+                                  <li key={highlight} class="flex gap-2">
+                                    <span class="mt-2 h-1 w-1 shrink-0 rounded-full bg-blue-300"></span>
+                                    <span>{highlight}</span>
+                                  </li>
+                                ),
+                              )}
                             </ul>
                           </div>
                         ) : null}
@@ -1402,18 +1469,26 @@ export default defineComponent({
                       Start with a short project brief.
                     </h3>
                     <p class="mt-3 text-sm sm:text-base text-gray-400 leading-relaxed max-w-xl">
-                      Send the product context, current blocker, and expected timeline. I will reply with whether I can help and the best next step.
+                      Send the product context, current blocker, and expected
+                      timeline. I will reply with whether I can help and the
+                      best next step.
                     </p>
 
                     <div class="mt-5 flex flex-col gap-2.5 text-sm text-gray-400">
                       <div class="rounded-2xl border border-white/5 bg-white/3 px-4 py-3">
-                        <span class="text-white font-medium">Best fit:</span> fintech apps, release support, payment flows, and delivery recovery.
+                        <span class="text-white font-medium">Best fit:</span>{" "}
+                        fintech apps, release support, payment flows, and
+                        delivery recovery.
                       </div>
                       <div class="rounded-2xl border border-white/5 bg-white/3 px-4 py-3">
-                        <span class="text-white font-medium">What to send:</span> summary, current stack, blockers, and target date.
+                        <span class="text-white font-medium">
+                          What to send:
+                        </span>{" "}
+                        summary, current stack, blockers, and target date.
                       </div>
                       <div class="rounded-2xl border border-white/5 bg-white/3 px-4 py-3">
-                        <span class="text-white font-medium">Response:</span> usually within 24 hours for direct project inquiries.
+                        <span class="text-white font-medium">Response:</span>{" "}
+                        usually within 24 hours for direct project inquiries.
                       </div>
                     </div>
                   </div>
@@ -1445,7 +1520,8 @@ export default defineComponent({
                         </div>
 
                         <p class="mt-3 text-sm text-gray-400 leading-relaxed">
-                          Best for project inquiries, consulting, and product delivery support.
+                          Best for project inquiries, consulting, and product
+                          delivery support.
                         </p>
 
                         <div class="mt-4 grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto] gap-2.5">
@@ -1486,7 +1562,8 @@ export default defineComponent({
                         </div>
 
                         <p class="mt-3 text-sm text-gray-400 leading-relaxed">
-                          Best for quick coordination, follow-up, and confirming delivery scope.
+                          Best for quick coordination, follow-up, and confirming
+                          delivery scope.
                         </p>
 
                         <div class="mt-4 grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto] gap-2.5">
@@ -1516,16 +1593,29 @@ export default defineComponent({
                           Availability
                         </p>
                         <div class="mt-3 flex flex-col gap-2 text-sm text-gray-400 leading-relaxed">
-                          <p><span class="text-white font-medium">Timezone:</span> Phnom Penh, GMT+7</p>
-                          <p><span class="text-white font-medium">Focus:</span> Flutter, payments, Laravel, Vue, and production delivery.</p>
-                          <p><span class="text-white font-medium">Response:</span> usually within 24 hours.</p>
+                          <p>
+                            <span class="text-white font-medium">
+                              Timezone:
+                            </span>{" "}
+                            Phnom Penh, GMT+7
+                          </p>
+                          <p>
+                            <span class="text-white font-medium">Focus:</span>{" "}
+                            Flutter, payments, Laravel, Vue, and production
+                            delivery.
+                          </p>
+                          <p>
+                            <span class="text-white font-medium">
+                              Response:
+                            </span>{" "}
+                            usually within 24 hours.
+                          </p>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              
             </section>
           </main>
 
@@ -1542,13 +1632,13 @@ export default defineComponent({
 
               <div class="flex items-center gap-4">
                 <MagneticLink
-                  href="https://linkedin.com"
+                  href="https://www.linkedin.com/in/oun-rout-martin-5b64b2204"
                   class="w-8 h-8 rounded-full bg-white/5 border border-white/5 text-gray-400 hover:text-white hover:border-indigo-500/20 hover:bg-indigo-600/10 transition-all duration-300"
                 >
                   <Linkedin class="w-3.5 h-3.5" />
                 </MagneticLink>
                 <MagneticLink
-                  href="https://github.com"
+                  href="https://github.com/routmartin"
                   class="w-8 h-8 rounded-full bg-white/5 border border-white/5 text-gray-400 hover:text-white hover:border-indigo-500/20 hover:bg-indigo-600/10 transition-all duration-300"
                 >
                   <Github class="w-3.5 h-3.5" />

@@ -240,9 +240,9 @@ export const projects: Project[] = [
     businessValue:
       "Delivered practical mobile workflows for restaurant operations, order handling, testing, deployment, and internal food-service processes.",
     features: [
-      "Point Restaurant App",
-      "Point Food",
-      "Food Court App",
+      "Restaurant App",
+      "Food Delivery App",
+      "Internal Food Court App",
       "POS Workflows",
     ],
     technicalHighlights: [
@@ -411,9 +411,13 @@ export const experiences: Experience[] = [
       "QA",
       "Release Packaging",
     ],
-    projects: ["Point Restaurant App", "Point Food", "Internal Food Court App"],
+    projects: [
+      "Point Restaurant App",
+      "Food Delivery App",
+      "Internal Food Court App",
+    ],
     achievements: [
-      "Developed, tested, and deployed Point Restaurant App, Point Food, and an internal Food Court app.",
+      "Developed, tested, and deployed Restaurant App, Food Delivery App, and an internal Food Court app.",
       "Supported restaurant and food-service workflows, mobile delivery, QA, and release packaging.",
       "Translated POS requirements into practical mobile screens for internal teams and customer-facing workflows.",
     ],
