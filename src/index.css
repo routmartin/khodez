@@ -1171,6 +1171,19 @@ html {
 }
 
 @media (max-width: 640px) {
+  .chat-dialog-shell {
+    border-radius: 1rem;
+  }
+
+  .chat-conversation-surface {
+    border-radius: 1rem;
+  }
+
+  .chat-message-card {
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
   .wallet-stack-stage {
     min-height: 25rem;
     padding-inline: 3.2rem;
