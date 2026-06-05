@@ -23,6 +23,7 @@ export const AIChatBot = defineComponent({
     const input = ref("");
     const isLoading = ref(false);
     const messagesEndRef = ref<HTMLDivElement | null>(null);
+    const latestUserMessageRef = ref<HTMLDivElement | null>(null);
 
     const suggestions = [
       "Are you available for contract roles?",
@@ -149,10 +150,14 @@ export const AIChatBot = defineComponent({
     };
 
     watch(
-      () => [messages.value.length, isOpen.value],
-      async () => {
+      isOpen,
+      async (nextIsOpen) => {
+        if (!nextIsOpen) {
+          return;
+        }
+
         await nextTick();
-        messagesEndRef.value?.scrollIntoView({ behavior: "smooth" });
+        messagesEndRef.value?.scrollIntoView({ behavior: "auto" });
       },
     );
 
@@ -183,6 +188,11 @@ export const AIChatBot = defineComponent({
       messages.value = requestMessages;
       input.value = "";
       isLoading.value = true;
+      await nextTick();
+      latestUserMessageRef.value?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
 
       try {
         const response = await fetch("/api/chat", {
@@ -246,38 +256,35 @@ export const AIChatBot = defineComponent({
         </span>
       </button>,
       isOpen.value ? (
-        <div class="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+        <div class="fixed inset-0 z-50 flex items-center justify-center p-2 pointer-events-none sm:p-4">
           <div
             class="theme-chat-backdrop absolute inset-0 pointer-events-auto backdrop-filter backdrop-blur-sm"
           ></div>
 
           <div
-            class="glass-container chat-dialog-shell relative z-10 flex h-[calc(100vh-2rem)] max-h-[720px] w-full max-w-4xl flex-col overflow-hidden rounded-2xl bg-brand-surface/98 shadow-2xl pointer-events-auto sm:h-[88vh]"
+            class="glass-container chat-dialog-shell relative z-10 flex h-[calc(100dvh-1rem)] w-full max-w-[72rem] flex-col overflow-hidden rounded-2xl bg-brand-surface/98 shadow-2xl pointer-events-auto sm:h-[92dvh] sm:max-h-[860px]"
             role="dialog"
             aria-modal="true"
             aria-labelledby="ai-chatbot-dialog-title"
           >
             <div class="absolute left-0 top-0 h-[4px] w-full bg-gradient-to-r from-teal-500 via-indigo-500 to-indigo-800"></div>
 
-            <div class="theme-chat-chrome border-b border-white/5 p-4 sm:p-5">
-              <div class="flex items-start justify-between gap-4 rounded-2xl border border-white/5 bg-white/5 p-4 sm:p-5">
+            <div class="theme-chat-chrome border-b border-white/5 p-3 sm:p-5">
+              <div class="flex items-start justify-between gap-3 rounded-2xl border border-white/5 bg-white/5 p-3 sm:gap-4 sm:p-5">
                 <div class="flex min-w-0 items-center gap-3">
-                  <div class="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-indigo-400/20 bg-indigo-500/10 text-indigo-300 shadow-sm">
-                    <Sparkles class="h-5 w-5 animate-pulse" />
+                  <div class="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-indigo-400/20 bg-indigo-500/10 text-indigo-300 shadow-sm sm:h-11 sm:w-11">
+                    <Sparkles class="h-6 w-6 animate-pulse" />
                   </div>
-                  <div class="min-w-0 text-left">
-                    <p class="text-xs font-semibold uppercase tracking-wide text-indigo-300">
-                      AI assistant
-                    </p>
+                  <div class="flex min-w-0 items-center gap-2 text-left sm:gap-3">
                     <h4
                       id="ai-chatbot-dialog-title"
-                      class="mt-1 truncate font-display text-lg font-bold leading-tight text-white sm:text-xl"
+                      class="min-w-0 truncate font-display text-sm font-semibold leading-snug text-white sm:text-lg"
                     >
                       Rout Martin Digital Twin
                     </h4>
-                    <span class="mt-2 inline-flex items-center gap-1.5 rounded-full border border-emerald-400/15 bg-emerald-400/10 px-2.5 py-1 text-xs font-medium text-emerald-300">
-                      <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400"></span>
-                      Gemini model online
+                    <span class="inline-flex shrink-0 items-center gap-1 rounded-full border border-emerald-400/15 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-medium text-emerald-300 sm:text-[11px]">
+                      <span class="h-1 w-1 animate-pulse rounded-full bg-emerald-400"></span>
+                      Gemini model online /  AI assistant
                     </span>
                   </div>
                 </div>
@@ -293,11 +300,17 @@ export const AIChatBot = defineComponent({
               </div>
             </div>
 
-            <div class="flex-1 overflow-hidden p-4 sm:p-5">
-              <div class="chat-conversation-surface h-full space-y-5 overflow-y-auto rounded-2xl border border-white/5 p-3.5 sm:p-4">
+            <div class="flex-1 overflow-hidden p-2.5 sm:p-5">
+              <div class="chat-conversation-surface h-full space-y-4 overflow-y-auto rounded-2xl border border-white/5 p-3 sm:space-y-5 sm:p-5">
                 {messages.value.map((message, index) => (
                   <div
                     key={index}
+                    ref={
+                      message.role === "user" &&
+                      index === messages.value.length - 1
+                        ? latestUserMessageRef
+                        : undefined
+                    }
                     class={`flex gap-3 ${
                       message.role === "user"
                         ? "justify-end"
@@ -305,7 +318,7 @@ export const AIChatBot = defineComponent({
                     }`}
                   >
                     <div
-                      class={`flex max-w-[94%] gap-3 sm:max-w-[90%] ${
+                      class={`flex max-w-[98%] gap-2.5 sm:max-w-[94%] sm:gap-3 ${
                         message.role === "user"
                           ? "flex-row-reverse"
                           : "flex-row"
@@ -330,7 +343,7 @@ export const AIChatBot = defineComponent({
                         }`}
                       >
                         <div
-                          class={`chat-message-card rounded-2xl px-4 py-3 text-left text-[15px] leading-7 sm:text-base ${
+                          class={`chat-message-card rounded-2xl px-3.5 py-3 text-left text-[15px] leading-7 sm:px-4 sm:text-base ${
                             message.role === "user"
                               ? "chat-message-card--user text-white"
                               : "chat-message-card--assistant text-white"
@@ -357,7 +370,7 @@ export const AIChatBot = defineComponent({
 
                 {isLoading.value ? (
                   <div class="flex justify-start">
-                    <div class="flex max-w-[94%] gap-3 sm:max-w-[90%]">
+                    <div class="flex max-w-[98%] gap-2.5 sm:max-w-[94%] sm:gap-3">
                       <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl border border-indigo-400/20 bg-indigo-500/10 text-indigo-300">
                         <Loader2 class="h-4 w-4 animate-spin" />
                       </div>
@@ -372,7 +385,7 @@ export const AIChatBot = defineComponent({
               </div>
             </div>
 
-            <div class="theme-chat-chrome border-t border-white/5 p-4 sm:p-5">
+            <div class="theme-chat-chrome border-t border-white/5 p-3 sm:p-5">
               {messages.value.length === 1 ? (
                 <div class="mb-3 rounded-2xl border border-white/5 bg-white/5 p-3">
                   <p class="mb-2 text-left text-xs font-semibold uppercase tracking-wide text-white/60">
