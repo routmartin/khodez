@@ -7,6 +7,7 @@ import {
   watch,
 } from "vue";
 import {
+  Apple,
   ArrowRight,
   BookOpen,
   Check,
@@ -22,6 +23,7 @@ import {
   Mail,
   Moon,
   Phone,
+  Play,
   Smartphone,
   Sun,
   Twitter,
@@ -519,7 +521,7 @@ export default defineComponent({
           ) : null}
 
           {/* 2. CORE MASTER PAGE LAYOUT CONTAINER */}
-          <main class="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-10 pt-12 pb-24 relative select-text">
+          <main class="max-w-[1280px] mx-auto px-6 sm:px-10 lg:px-16 xl:px-20 pt-14 pb-28 relative select-text">
             {/* HERO TITLE & VISUAL SECTION */}
             <section
               id="hero"
@@ -596,7 +598,7 @@ export default defineComponent({
             {/* 5. ROAD JOURNEY TIMELINE SEGMENT */}
             <section
               id="experience"
-              class="section-anchor py-16 text-left reveal-on-scroll reveal-delay-1"
+              class="section-anchor relative left-1/2 w-screen max-w-[1500px] -translate-x-1/2 px-6 sm:px-8 lg:px-12 py-16 text-left reveal-on-scroll reveal-delay-1"
               data-reveal
             >
               <h3 class="font-display text-2xl font-bold text-white mb-8 border-b border-white/5 pb-2.5">
@@ -1060,6 +1062,74 @@ export default defineComponent({
                       <p class="max-w-2xl text-sm text-gray-400 leading-relaxed font-sans">
                         {featuredProject.role}
                       </p>
+
+                      {featuredProject.storeLinks ? (
+                        <div class="flex flex-wrap gap-3 pt-1 select-none">
+                          {[
+                            {
+                              label: "App Store",
+                              eyebrow: "Available on",
+                              href: featuredProject.storeLinks.appStore,
+                              icon: Apple,
+                              tone: "store-link--apple",
+                            },
+                            {
+                              label: "Google Play",
+                              eyebrow: "Get it on",
+                              href: featuredProject.storeLinks.googlePlay,
+                              icon: Play,
+                              tone: "store-link--play",
+                            },
+                          ].map((store) => {
+                            const StoreIcon = store.icon;
+                            const content = (
+                              <>
+                                <span class="store-link__icon">
+                                  <StoreIcon size={20} stroke-width={2.2} />
+                                </span>
+                                <span class="min-w-0">
+                                  <span class="block text-[10px] uppercase tracking-[0.14em] text-slate-400 leading-none">
+                                    {store.href
+                                      ? store.eyebrow
+                                      : "Store link coming soon"}
+                                  </span>
+                                  <span class="block mt-1 text-sm font-bold text-white leading-none">
+                                    {store.label}
+                                  </span>
+                                </span>
+                                <span
+                                  class={`store-link__status ${
+                                    store.href ? "is-live" : ""
+                                  }`}
+                                  aria-hidden="true"
+                                />
+                              </>
+                            );
+
+                            return store.href ? (
+                              <a
+                                key={store.label}
+                                href={store.href}
+                                target="_blank"
+                                rel="noreferrer"
+                                class={`store-link ${store.tone}`}
+                                aria-label={`Open ${featuredProject.title} on ${store.label}`}
+                                onClick={(event) => event.stopPropagation()}
+                              >
+                                {content}
+                              </a>
+                            ) : (
+                              <div
+                                key={store.label}
+                                class={`store-link ${store.tone} is-pending`}
+                                title={`${store.label} link coming soon`}
+                              >
+                                {content}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ) : null}
                     </div>
                   </div>
                 ) : null}
@@ -1116,9 +1186,63 @@ export default defineComponent({
                         </div>
                       </div>
 
-                      <p class="mt-4 text-sm font-mono uppercase tracking-wide text-white/35">
-                        {project.company}
-                      </p>
+                      <div class="mt-4 flex items-end justify-between gap-3">
+                        <p class="text-sm font-mono uppercase tracking-wide text-white/35">
+                          {project.company}
+                        </p>
+
+                        {project.storeLinks ? (
+                          <div
+                            class="project-store-icons"
+                            aria-label={`${project.title} app stores`}
+                            onClick={(event) => event.stopPropagation()}
+                          >
+                            {[
+                              {
+                                label: "App Store",
+                                href: project.storeLinks.appStore,
+                                icon: Apple,
+                                tone: "project-store-icon--apple",
+                              },
+                              {
+                                label: "Google Play",
+                                href: project.storeLinks.googlePlay,
+                                icon: Play,
+                                tone: "project-store-icon--play",
+                              },
+                            ].map((store) => {
+                              const StoreIcon = store.icon;
+                              const icon = (
+                                <StoreIcon size={17} stroke-width={2.2} />
+                              );
+
+                              return store.href ? (
+                                <a
+                                  key={store.label}
+                                  href={store.href}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  class={`project-store-icon ${store.tone}`}
+                                  aria-label={`Open ${project.title} on ${store.label}`}
+                                  title={store.label}
+                                  onClick={(event) => event.stopPropagation()}
+                                >
+                                  {icon}
+                                </a>
+                              ) : (
+                                <span
+                                  key={store.label}
+                                  class={`project-store-icon ${store.tone} is-pending`}
+                                  aria-label={`${store.label} link coming soon`}
+                                  title={`${store.label} link coming soon`}
+                                >
+                                  {icon}
+                                </span>
+                              );
+                            })}
+                          </div>
+                        ) : null}
+                      </div>
                     </div>
                   ))}
                 </div>

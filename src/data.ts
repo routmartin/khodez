@@ -97,6 +97,11 @@ export const projects: Project[] = [
       "Improved socket handling, offline states, API request flow, and failed-transaction recovery",
       "Supported Khmer, English, Chinese, Vietnamese, and Thai localization",
     ],
+    storeLinks: {
+      appStore: "https://apps.apple.com/kh/app/dv-pay/id6445850625",
+      googlePlay:
+        "https://play.google.com/store/apps/details?id=net.dvpay.app&hl=en",
+    },
     mockType: "fintech",
   },
   {
@@ -128,6 +133,11 @@ export const projects: Project[] = [
       "Integrated Pushy notifications and improved unread badges, maintenance messages, and root socket behavior",
       "Prepared Shorebird support, App Store export settings, AAB/APK scripts, and app versioning",
     ],
+    storeLinks: {
+      appStore: "https://apps.apple.com/kh/app/htp-cards/id6763494339",
+      googlePlay:
+        "https://play.google.com/store/apps/details?id=com.htpcard&hl=en",
+    },
     mockType: "htp",
   },
   {
@@ -192,39 +202,81 @@ export const projects: Project[] = [
     mockType: "trade",
   },
   {
-    id: "kofi-konfulon",
+    id: "kofi",
     number: 5,
-    title: "KOFI & KONFULON E-commerce Apps",
+    title: "KOFI E-commerce App",
     company: "IG International Group",
     role: "Flutter Developer / Vue Developer",
     scope:
-      "E-commerce, inventory, checkout, promotions, and local payment integrations",
+      "E-commerce, tablet/mobile UX, checkout, and local payment integrations",
     description:
-      "Flutter and Vue commerce products covering product listings, checkout, favorites, promotions, inventory workflows, payment gateways, and production delivery.",
+      "A Flutter e-commerce app for mobile and tablet built around KOFI UX/UI guidelines, product discovery, checkout, local payment flows, and production testing support.",
     tags: [
       { name: "Flutter", type: "tech" },
-      { name: "Vue", type: "tech" },
       { name: "GetX", type: "tech" },
+      { name: "MVC", type: "tech" },
       { name: "ABA PayWay", type: "platform" },
     ],
     businessValue:
-      "Turned client requirements into production e-commerce features and integrated local payment services including Acleda XPay and ABA PayWay.",
+      "Delivered a production-ready commerce app aligned to KOFI design requirements, including internal and bank payment integrations for local checkout flows.",
+    features: [
+      "Product Listing",
+      "Checkout Flow",
+      "Tablet Experience",
+      "Acleda XPay & ABA PayWay",
+    ],
+    technicalHighlights: [
+      "Designed and developed mobile and tablet experiences based on KOFI UX/UI guidelines",
+      "Built a scalable Flutter app architecture with GetX and MVC and integrated internal plus third-party APIs",
+      "Managed TestFlight and internal testing releases while tracking tester feedback and stability in Firebase Crashlytics",
+    ],
+    storeLinks: {
+      appStore: "https://apps.apple.com/kh/app/kofi/id1582783748",
+      googlePlay:
+        "https://play.google.com/store/apps/details?id=com.kofiapp.cambodia&hl=en",
+    },
+    mockType: "commerce",
+  },
+  {
+    id: "konfulon",
+    number: 6,
+    title: "KONFULON E-commerce App",
+    company: "IG International Group",
+    role: "Flutter Developer / Vue Developer",
+    scope:
+      "E-commerce, inventory workflows, checkout, promotions, and deployment",
+    description:
+      "A Flutter e-commerce app focused on product listing, checkout, favorites, promotions, payment integration, and maintainable production delivery for KONFULON.",
+    tags: [
+      { name: "Flutter", type: "tech" },
+      { name: "Provider", type: "tech" },
+      { name: "MVVM", type: "tech" },
+      { name: "Payment Gateway", type: "platform" },
+    ],
+    businessValue:
+      "Converted client requirements into a production-ready commerce app with clean architecture, core shopping flows, and controlled staging and production releases.",
     features: [
       "Product Listing",
       "Checkout & Favorites",
       "Promotions",
-      "Bank Payment Gateway",
+      "Staging & Production Deployment",
     ],
     technicalHighlights: [
-      "Built GetX/MVC and Provider/MVVM app architectures",
-      "Integrated internal and third-party APIs",
-      "Managed staging and production deployment workflows",
+      "Built the Flutter architecture with Provider and MVVM for a well-organized and maintainable codebase",
+      "Implemented core e-commerce workflows including checkout, favorites, promotions, and payment gateway integration",
+      "Worked directly with the client to gather requirements and ship staging and production environments",
     ],
+    storeLinks: {
+      appStore:
+        "https://apps.apple.com/kh/app/konfulon-online/id1472957096",
+      googlePlay:
+        "https://play.google.com/store/apps/details?id=com.nimblent&hl=en",
+    },
     mockType: "commerce",
   },
   {
     id: "pos-food",
-    number: 6,
+    number: 7,
     title: "POS, Restaurant & Food Delivery Apps",
     company: "SoftPoint AutoID",
     role: "Flutter Developer",
@@ -253,31 +305,69 @@ export const projects: Project[] = [
     mockType: "pos",
   },
   {
-    id: "business-systems",
-    number: 7,
-    title: "MOI, Document Management & HR Training Systems",
+    id: "moi-new-cambodia",
+    number: 8,
+    title: "MOI New Cambodia",
     company: "Digitalsky Multimedia / OneTV",
     role: "Software Developer",
-    scope: "Business systems, mobile apps, HR training, and document workflows",
+    scope:
+      "Mobile app development, requirement analysis, workflow planning, and product improvement",
     description:
-      "Business and media operation systems including MOI New Cambodia, Skyone document management, and an online training system for HR.",
+      "A mobile application called MOI New Cambodia, developed alongside project requirement analysis, workflow planning, and ongoing product improvements shaped by business needs, market demand, and customer feedback.",
     tags: [
       { name: "Mobile", type: "tech" },
       { name: "Business Systems", type: "platform" },
       { name: "Workflow", type: "tech" },
     ],
     businessValue:
-      "Supported requirement analysis, workflow planning, product maintenance, and feature delivery based on business needs and user feedback.",
+      "Helped deliver and improve the MOI app by aligning software features with business goals, market demand, customer feedback, and product quality expectations.",
     features: [
-      "MOI New Cambodia",
+      "MOI Mobile App",
+      "Requirement Analysis",
+      "Workflow Planning",
+      "Product Improvement",
+    ],
+    technicalHighlights: [
+      "Developed a mobile application called MOI New Cambodia",
+      "Analyzed project requirements and participated in workflow planning",
+      "Built and improved existing products based on business needs, market demand, and customer feedback",
+      "Collaborated with the team to deliver software features and maintain product quality",
+    ],
+    storeLinks: {
+      appStore:
+        "https://apps.apple.com/kh/app/moitv-cambodia/id1594639836",
+      googlePlay:
+        "https://play.google.com/store/apps/details?id=com.interiortelevision.kh&hl=en",
+    },
+    mockType: "systems",
+  },
+  {
+    id: "document-hr-systems",
+    number: 9,
+    title: "Document Management & HR Training Systems",
+    company: "Digitalsky Multimedia / OneTV",
+    role: "Software Developer",
+    scope:
+      "Document workflows, internal training tools, and business operations",
+    description:
+      "Internal systems for document management and HR training, built and maintained to support operational workflows and ongoing business needs.",
+    tags: [
+      { name: "Mobile", type: "tech" },
+      { name: "Document Management", type: "platform" },
+      { name: "Training Systems", type: "tech" },
+    ],
+    businessValue:
+      "Improved document and HR training workflows by maintaining internal tools and adding features that matched changing operational requirements.",
+    features: [
       "Document Management",
       "Online Training",
+      "Workflow Support",
       "System Maintenance",
     ],
     technicalHighlights: [
-      "Contributed to requirement analysis and workflow planning",
-      "Maintained existing systems and added new features",
-      "Built internal tools for HR and document operations",
+      "Built and maintained internal tools for document operations and HR training",
+      "Added features based on user feedback and business workflow changes",
+      "Supported ongoing product maintenance across internal business systems",
     ],
     mockType: "systems",
   },
@@ -385,9 +475,9 @@ export const experiences: Experience[] = [
       "Inventory Management Products",
     ],
     achievements: [
-      "Built KOFI and KONFULON mobile/tablet experiences for product listings, checkout, favorites, promotions, and payment flows.",
-      "Integrated internal APIs, third-party APIs, and local payment services including Acleda XPay and ABA PayWay.",
-      "Implemented GetX/MVC and Provider/MVVM architectures, managed staging/production deployments, and worked directly with clients to ship requirements.",
+      "Delivered KOFI mobile and tablet experiences based on UX/UI guidelines, using GetX and MVC plus internal APIs, third-party services, Acleda XPay, ABA PayWay, TestFlight, internal testing, and Firebase Crashlytics monitoring.",
+      "Built KONFULON with Provider and MVVM, shipping product listing, checkout, favorites, promotions, payment gateway integration, and staging/production deployment.",
+      "Worked directly with clients to gather requirements and turn them into production-ready e-commerce applications with a maintainable codebase.",
     ],
   },
   {

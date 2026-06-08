@@ -904,6 +904,171 @@ html {
     box-shadow 0.34s ease;
 }
 
+.store-link {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  min-width: 172px;
+  align-items: center;
+  gap: 0.7rem;
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 0.9rem;
+  padding: 0.7rem 0.8rem;
+  background:
+    linear-gradient(135deg, rgba(15, 23, 42, 0.94), rgba(15, 23, 42, 0.68));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 10px 24px rgba(2, 6, 23, 0.22);
+  transition:
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.store-link::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 22%,
+    rgba(255, 255, 255, 0.09) 46%,
+    transparent 68%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.65s ease;
+}
+
+.store-link:hover {
+  transform: translateY(-3px);
+  border-color: rgba(96, 165, 250, 0.42);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 14px 30px rgba(2, 6, 23, 0.3);
+}
+
+.store-link:hover::before {
+  transform: translateX(120%);
+}
+
+.store-link__icon {
+  display: grid;
+  width: 2.15rem;
+  height: 2.15rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 0.7rem;
+  color: white;
+  transition: transform 0.25s ease;
+}
+
+.store-link:hover .store-link__icon {
+  transform: scale(1.08) rotate(-3deg);
+}
+
+.store-link--apple .store-link__icon {
+  background: linear-gradient(145deg, #334155, #0f172a);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.4);
+}
+
+.store-link--play .store-link__icon {
+  color: #bfdbfe;
+  background: linear-gradient(145deg, #2563eb, #4f46e5);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
+}
+
+.store-link__status {
+  width: 0.4rem;
+  height: 0.4rem;
+  margin-left: auto;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: #64748b;
+  box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.12);
+}
+
+.store-link__status.is-live {
+  background: #34d399;
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.12);
+  animation: store-status-pulse 2.2s ease-in-out infinite;
+}
+
+.store-link.is-pending {
+  cursor: default;
+}
+
+@keyframes store-status-pulse {
+  50% {
+    box-shadow: 0 0 0 6px rgba(52, 211, 153, 0);
+  }
+}
+
+.project-store-icons {
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 0.45rem;
+}
+
+.project-store-icon {
+  position: relative;
+  display: grid;
+  width: 2.15rem;
+  height: 2.15rem;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 0.7rem;
+  color: white;
+  background: rgba(15, 23, 42, 0.86);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 7px 18px rgba(2, 6, 23, 0.2);
+  transition:
+    transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.24s ease,
+    box-shadow 0.24s ease;
+}
+
+.project-store-icon::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 25%,
+    rgba(255, 255, 255, 0.14) 48%,
+    transparent 70%
+  );
+  transform: translateX(-130%);
+  transition: transform 0.55s ease;
+}
+
+.project-store-icon:hover {
+  transform: translateY(-3px) scale(1.05);
+  border-color: rgba(96, 165, 250, 0.4);
+  box-shadow: 0 10px 22px rgba(2, 6, 23, 0.32);
+}
+
+.project-store-icon:hover::after {
+  transform: translateX(130%);
+}
+
+.project-store-icon--apple {
+  background: linear-gradient(145deg, #334155, #0f172a);
+}
+
+.project-store-icon--play {
+  color: #bfdbfe;
+  background: linear-gradient(145deg, #2563eb, #4f46e5);
+}
+
+.project-store-icon.is-pending {
+  cursor: default;
+  opacity: 0.8;
+}
+
 .wallet-stack-expertise {
   display: grid;
   grid-template-columns: 1fr;
