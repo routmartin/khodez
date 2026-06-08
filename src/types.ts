@@ -17,6 +17,10 @@ export interface Project {
   businessValue: string;
   features: string[];
   technicalHighlights?: string[];
+  storeLinks?: {
+    appStore?: string;
+    googlePlay?: string;
+  };
   mockType: "fintech" | "htp" | "chat" | "trade" | "commerce" | "pos" | "systems";
 }
 
