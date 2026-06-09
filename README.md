@@ -25,3 +25,9 @@ View your app in AI Studio: https://ai.studio/apps/e10f93c1-be51-4f98-8aec-56fe9
 - the Express API server on port `3001`
 
 Frontend requests to `/api/chat` are proxied to the API server during development.
+
+## Analytics
+
+The app supports optional Umami Cloud visitor and interaction analytics.
+The one-variable setup is documented in
+[ANALYTICS_SETUP.md](ANALYTICS_SETUP.md).

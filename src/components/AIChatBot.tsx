@@ -7,6 +7,7 @@ import {
   User,
 } from "lucide-vue-next";
 import type { Message } from "../types";
+import { trackEvent } from "../analytics";
 
 export const AIChatBot = defineComponent({
   name: "AIChatBot",
@@ -177,6 +178,9 @@ export const AIChatBot = defineComponent({
 
     const handleSendMessage = async (text: string) => {
       if (!text.trim() || isLoading.value) return;
+      trackEvent("chat_question_submit", {
+        question_source: suggestions.includes(text) ? "suggestion" : "typed",
+      });
 
       const userMessage: Message = {
         role: "user",
@@ -241,6 +245,9 @@ export const AIChatBot = defineComponent({
       <button
         id="ai-assistant-toggle-btn"
         onClick={() => {
+          if (!isOpen.value) {
+            trackEvent("chat_open");
+          }
           isOpen.value = !isOpen.value;
         }}
         class="glass-container motion-soft-lift group fixed bottom-6 right-6 z-50 flex cursor-pointer items-center gap-2 rounded-full px-3.5 py-3 text-white shadow-xl active:scale-95"

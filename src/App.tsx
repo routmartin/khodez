@@ -32,6 +32,7 @@ import { HeroVisuals } from "./components/HeroVisuals";
 import { ProjectMockups } from "./components/ProjectMockups";
 import { AIChatBot } from "./components/AIChatBot";
 import { MagneticLink } from "./components/MagneticLink";
+import { trackEvent } from "./analytics";
 import {
   skillCategories,
   projects,
@@ -74,6 +75,29 @@ export default defineComponent({
     let revealObserver: IntersectionObserver | undefined;
     let sectionObserver: IntersectionObserver | undefined;
     let typingTimeout: number | undefined;
+    const trackedSections = new Set<string>();
+
+    const trackSectionView = (sectionId: string) => {
+      if (trackedSections.has(sectionId)) return;
+      trackedSections.add(sectionId);
+      trackEvent("section_view", { section_name: sectionId });
+    };
+
+    const openProject = (project: Project) => {
+      selectedProjectId.value = project.id;
+      trackEvent("project_open", {
+        project_id: project.id,
+        project_name: project.title,
+      });
+    };
+
+    const openArticle = (articleId: string, articleTitle: string) => {
+      selectedArticleId.value = articleId;
+      trackEvent("article_open", {
+        article_id: articleId,
+        article_name: articleTitle,
+      });
+    };
 
     const closeActiveDialog = () => {
       if (isProfilePhotoOpen.value) {
@@ -120,6 +144,7 @@ export default defineComponent({
 
     onMounted(() => {
       window.addEventListener("keydown", handleEscapeKey);
+      trackSectionView("hero");
 
       const prefersReducedMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
@@ -207,6 +232,7 @@ export default defineComponent({
           }
 
           activeSection.value = visibleEntries[0].target.id;
+          trackSectionView(visibleEntries[0].target.id);
         },
         {
           threshold: [0.08, 0.22, 0.38, 0.55],
@@ -257,6 +283,10 @@ export default defineComponent({
 
     const handleCopyEmail = () => {
       navigator.clipboard.writeText("ounroutcambodia@gmail.com");
+      trackEvent("contact_click", {
+        contact_method: "email",
+        contact_action: "copy",
+      });
       copiedEmail.value = true;
       window.setTimeout(() => {
         copiedEmail.value = false;
@@ -265,6 +295,10 @@ export default defineComponent({
 
     const handleCopyPhone = () => {
       navigator.clipboard.writeText("+855 95 530 65");
+      trackEvent("contact_click", {
+        contact_method: "phone",
+        contact_action: "copy",
+      });
       copiedPhone.value = true;
       window.setTimeout(() => {
         copiedPhone.value = false;
@@ -466,6 +500,11 @@ export default defineComponent({
                   href="https://ai.studio/build"
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() =>
+                    trackEvent("download_click", {
+                      download_name: "resume_nav",
+                    })
+                  }
                   class="motion-shimmer motion-soft-lift flex items-center gap-1.5 px-4.5 py-1.5 rounded-2xl bg-white/10 border border-white/10 hover:bg-white/20 hover:border-white/25 text-white font-mono text-xs font-medium transition-all cursor-pointer"
                 >
                   <Download class="w-3.5 h-3.5" />
@@ -569,12 +608,21 @@ export default defineComponent({
                   </a>
                   <a
                     href="#contact"
+                    onClick={() =>
+                      trackEvent("contact_click", {
+                        contact_method: "section",
+                        contact_action: "hero_cta",
+                      })
+                    }
                     class="motion-soft-lift px-6 py-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/15 text-white font-medium transition-all active:scale-97 cursor-pointer"
                   >
                     Contact Me
                   </a>
                   <button
                     onClick={() => {
+                      trackEvent("download_click", {
+                        download_name: "portfolio_brief",
+                      });
                       alert(
                         "Rout Martin CV / Portfolio Brief Download triggered! (Local reference demo)",
                       );
@@ -1024,7 +1072,7 @@ export default defineComponent({
                     role="button"
                     tabindex="0"
                     onClick={() => {
-                      selectedProjectId.value = featuredProject.id;
+                      openProject(featuredProject);
                     }}
                     class="glass-container project-motion-card rounded-2xl p-5 sm:p-6 flex flex-col lg:flex-row items-center gap-6 hover:border-blue-500/20 focus-visible:border-blue-400/60 transition-all duration-300 shadow-xl relative overflow-hidden cursor-pointer reveal-on-scroll reveal-delay-1"
                     data-reveal
@@ -1114,7 +1162,13 @@ export default defineComponent({
                                 rel="noreferrer"
                                 class={`store-link ${store.tone}`}
                                 aria-label={`Open ${featuredProject.title} on ${store.label}`}
-                                onClick={(event) => event.stopPropagation()}
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  trackEvent("store_click", {
+                                    project_id: featuredProject.id,
+                                    store_name: store.label,
+                                  });
+                                }}
                               >
                                 {content}
                               </a>
@@ -1144,7 +1198,7 @@ export default defineComponent({
                       role="button"
                       tabindex="0"
                       onClick={() => {
-                        selectedProjectId.value = project.id;
+                        openProject(project);
                       }}
                       class="glass-container project-motion-card rounded-2xl p-4 flex min-h-[410px] flex-col justify-between hover:border-indigo-500/25 focus-visible:border-indigo-400/60 transition-all duration-300 shadow-lg relative overflow-hidden cursor-pointer"
                       style={{ transitionDelay: `${projectIdx * 0.04}s` }}
@@ -1225,7 +1279,13 @@ export default defineComponent({
                                   class={`project-store-icon ${store.tone}`}
                                   aria-label={`Open ${project.title} on ${store.label}`}
                                   title={store.label}
-                                  onClick={(event) => event.stopPropagation()}
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    trackEvent("store_click", {
+                                      project_id: project.id,
+                                      store_name: store.label,
+                                    });
+                                  }}
                                 >
                                   {icon}
                                 </a>
@@ -1401,7 +1461,7 @@ export default defineComponent({
                   <div
                     key={art.id}
                     onClick={() => {
-                      selectedArticleId.value = art.id;
+                      openArticle(art.id, art.title);
                     }}
                     class="glass-container rounded-2xl p-5 hover:border-purple-500/20 hover:bg-white/8 transition-all duration-300 shadow-md flex flex-col justify-between cursor-pointer group min-h-[190px] text-left select-none"
                     style={{ transitionDelay: `${artIdx * 0.05}s` }}
@@ -1651,6 +1711,12 @@ export default defineComponent({
                         <div class="mt-4 grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto] gap-2.5">
                           <a
                             href="mailto:ounroutcambodia@gmail.com"
+                            onClick={() =>
+                              trackEvent("contact_click", {
+                                contact_method: "email",
+                                contact_action: "open",
+                              })
+                            }
                             class="inline-flex justify-center items-center px-4 py-3 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold transition-all active:scale-97"
                           >
                             Send an Email
@@ -1693,6 +1759,12 @@ export default defineComponent({
                         <div class="mt-4 grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto] gap-2.5">
                           <a
                             href="tel:+8559553065"
+                            onClick={() =>
+                              trackEvent("contact_click", {
+                                contact_method: "phone",
+                                contact_action: "open",
+                              })
+                            }
                             class="inline-flex justify-center items-center px-4 py-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium transition-all active:scale-97"
                           >
                             Call Me
@@ -1763,6 +1835,9 @@ export default defineComponent({
                 </MagneticLink>
                 <MagneticLink
                   href="https://github.com/routmartin"
+                  onClick={() =>
+                    trackEvent("github_click", { link_location: "footer" })
+                  }
                   class="w-8 h-8 rounded-full bg-white/5 border border-white/5 text-gray-400 hover:text-white hover:border-indigo-500/20 hover:bg-indigo-600/10 transition-all duration-300"
                 >
                   <Github class="w-3.5 h-3.5" />

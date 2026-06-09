@@ -1,5 +1,7 @@
-import {createApp} from 'vue';
-import App from './App.tsx';
-import './index.css';
+import { createApp } from "vue";
+import App from "./App.tsx";
+import { initializeAnalytics } from "./analytics";
+import "./index.css";
 
-createApp(App).mount('#root');
+initializeAnalytics();
+createApp(App).mount("#root");

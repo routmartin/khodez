@@ -2,6 +2,10 @@ import { computed, defineComponent, ref, useAttrs } from "vue";
 
 export const MagneticLink = defineComponent({
   name: "MagneticLink",
+  inheritAttrs: false,
+  emits: {
+    click: (_event: MouseEvent) => true,
+  },
   props: {
     href: {
       type: String,
@@ -12,7 +16,7 @@ export const MagneticLink = defineComponent({
       default: "",
     },
   },
-  setup(props, { slots }) {
+  setup(props, { emit, slots }) {
     const attrs = useAttrs();
     const elementRef = ref<HTMLAnchorElement | null>(null);
     const x = ref(0);
@@ -53,6 +57,7 @@ export const MagneticLink = defineComponent({
         rel="noopener noreferrer"
         onMousemove={handleMouseMove}
         onMouseleave={handleMouseLeave}
+        onClick={(event) => emit("click", event)}
         style={linkStyle.value}
         class={["relative inline-flex items-center justify-center", attrs.class, props.className]}
       >
