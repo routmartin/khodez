@@ -497,7 +497,7 @@ export default defineComponent({
                 </button>
 
                 <a
-                  href="https://ai.studio/build"
+                  href=""
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() =>
