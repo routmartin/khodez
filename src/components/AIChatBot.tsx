@@ -279,16 +279,11 @@ export const AIChatBot = defineComponent({
             <div class="theme-chat-chrome border-b border-white/5 p-3 sm:p-5">
               <div class="flex items-start justify-between gap-3 rounded-2xl border border-white/5 bg-white/5 p-3 sm:gap-4 sm:p-5">
                 <div class="flex min-w-0 items-center gap-3">
-                  <div class="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-indigo-400/20 bg-indigo-500/10 text-indigo-300 shadow-sm sm:h-11 sm:w-11">
+                  {/* <div class="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-indigo-400/20 bg-indigo-500/10 text-indigo-300 shadow-sm sm:h-11 sm:w-11">
                     <Sparkles class="h-6 w-6 animate-pulse" />
-                  </div>
+                  </div> */}
                   <div class="flex min-w-0 items-center gap-2 text-left sm:gap-3">
-                    <h4
-                      id="ai-chatbot-dialog-title"
-                      class="min-w-0 truncate font-display text-sm font-semibold leading-snug text-white sm:text-lg"
-                    >
-                      Rout Martin Digital Twin
-                    </h4>
+                
                     <span class="inline-flex shrink-0 items-center gap-1 rounded-full border border-emerald-400/15 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-medium text-emerald-300 sm:text-[11px]">
                       <span class="h-1 w-1 animate-pulse rounded-full bg-emerald-400"></span>
                       Gemini model online /  AI assistant

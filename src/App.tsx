@@ -598,13 +598,15 @@ export default defineComponent({
                 {/* Soft display tag */}
 
                 {/* Action Buttons rows */}
-                <div class="flex flex-wrap items-center justify-center gap-3.5 mt-2 select-none">
+                <div class="hero-cta-group mt-2 select-none">
                   <a
                     href="#featured"
-                    class="motion-soft-lift  px-6 py-3 rounded-full bg-indigo-600 hover:bg-indigo-500 font-semibold text-white shadow-[0_0_20px_rgba(79,70,229,0.3)] hover:shadow-[0_0_25px_rgba(79,70,229,0.5)] hover:scale-103 active:scale-97 transition-all cursor-pointer flex items-center gap-2"
+                    class="hero-cta hero-cta--primary"
                   >
-                    <span>View Projects</span>
-                    <ArrowRight class="w-4 h-4" />
+                    <span class="hero-cta__label">View Projects</span>
+                    <span class="hero-cta__icon" aria-hidden="true">
+                      <ArrowRight class="w-4 h-4" />
+                    </span>
                   </a>
                   <a
                     href="#contact"
@@ -614,24 +616,13 @@ export default defineComponent({
                         contact_action: "hero_cta",
                       })
                     }
-                    class="motion-soft-lift px-6 py-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/15 text-white font-medium transition-all active:scale-97 cursor-pointer"
+                    class="hero-cta hero-cta--secondary"
                   >
-                    Contact Me
+                    <span class="hero-cta__icon" aria-hidden="true">
+                      <Mail class="w-4 h-4" />
+                    </span>
+                    <span class="hero-cta__label">Contact Me</span>
                   </a>
-                  <button
-                    onClick={() => {
-                      trackEvent("download_click", {
-                        download_name: "portfolio_brief",
-                      });
-                      alert(
-                        "Rout Martin CV / Portfolio Brief Download triggered! (Local reference demo)",
-                      );
-                    }}
-                    class="motion-soft-lift px-6 py-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/5 text-gray-300 hover:text-white transition-all flex items-center gap-2 cursor-pointer"
-                  >
-                    <Download class="w-4 h-4" />
-                    <span>Download CV</span>
-                  </button>
                 </div>
               </div>
 
@@ -1112,7 +1103,7 @@ export default defineComponent({
                       </p>
 
                       {featuredProject.storeLinks ? (
-                        <div class="flex flex-wrap gap-3 pt-1 select-none">
+                        <div class="featured-store-links pt-1 select-none">
                           {[
                             {
                               label: "App Store",
@@ -1635,14 +1626,10 @@ export default defineComponent({
               class="section-anchor mt-10 border-t border-white/5 py-20"
             >
               <div
-                class="relative mx-auto max-w-7xl overflow-hidden rounded-[36px] glass-container p-8 sm:p-12 lg:p-16 select-text reveal-on-scroll"
+                class="mx-auto max-w-7xl px-0 sm:px-4 lg:px-8 select-text reveal-on-scroll"
                 data-reveal
               >
-                {/* Status indicators inside layout */}
-                <div class="absolute top-0 left-0 w-full h-[4px] bg-gradient-to-r from-emerald-500 to-teal-500"></div>
-                <div class="absolute -top-12 right-0 w-52 h-52 bg-emerald-500/10 blur-3xl rounded-full pointer-events-none"></div>
-                <div class="absolute bottom-0 left-0 w-40 h-40 bg-cyan-500/10 blur-3xl rounded-full pointer-events-none"></div>
-                <div class="relative z-10 mx-auto flex max-w-4xl flex-col gap-5 text-left sm:gap-7">
+                <div class="mx-auto flex max-w-4xl flex-col gap-5 text-left sm:gap-7">
                   <div class="rounded-[28px] border border-white/5 bg-white/4 px-5 py-6 sm:px-8 sm:py-8">
                     <div class="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-[10px] font-mono text-emerald-400 select-none">
                       <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
