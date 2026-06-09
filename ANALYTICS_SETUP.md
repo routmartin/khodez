@@ -1,22 +1,14 @@
 # Umami Cloud Analytics
 
 The portfolio uses Umami Cloud for visitor statistics and privacy-safe
-interaction events. The production website ID is already configured in the
-tracker. Reports are viewed in Umami's dashboard; the portfolio has no
+interaction events. The production tracking tag is configured directly in the
+HTML `<head>`. Reports are viewed in Umami's dashboard; the portfolio has no
 analytics admin page or analytics server credentials.
 
 ## Setup
 
-No production environment variable is required for the configured portfolio.
-To point another deployment at a different Umami website, set:
-
-```dotenv
-VITE_UMAMI_WEBSITE_ID="00000000-0000-0000-0000-000000000000"
-```
-
-Run `npm run build` again after changing the value because Vite embeds it in
-the frontend bundle. The environment variable overrides the default website
-ID.
+No production environment variable is required. To use another Umami website,
+replace `data-website-id` in `index.html` and rebuild.
 
 ## What Is Tracked
 

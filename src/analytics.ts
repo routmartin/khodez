@@ -1,7 +1,3 @@
-const websiteId =
-  import.meta.env.VITE_UMAMI_WEBSITE_ID?.trim() ||
-  "c990b15b-0b2b-48c6-8f6f-95b81b8a79a7";
-
 type AnalyticsParameter = string | number | boolean | undefined;
 
 declare global {
@@ -15,11 +11,11 @@ declare global {
   }
 }
 
-let initialized = false;
 const pendingEvents: Array<{
   eventName: string;
   params: Record<string, AnalyticsParameter>;
 }> = [];
+let flushTimer: number | undefined;
 
 const flushPendingEvents = () => {
   if (!window.umami) return;
@@ -28,19 +24,21 @@ const flushPendingEvents = () => {
   });
 };
 
-export const initializeAnalytics = () => {
-  if (!websiteId || initialized || typeof document === "undefined") {
-    return;
-  }
-
-  initialized = true;
-  const script = document.createElement("script");
-  script.defer = true;
-  script.src = "https://cloud.umami.is/script.js";
-  script.dataset.websiteId = websiteId;
-  script.dataset.excludeSearch = "true";
-  script.addEventListener("load", flushPendingEvents, { once: true });
-  document.head.appendChild(script);
+const scheduleFlush = () => {
+  if (flushTimer) return;
+  let attempts = 0;
+  flushTimer = window.setInterval(() => {
+    attempts += 1;
+    if (window.umami) {
+      window.clearInterval(flushTimer);
+      flushTimer = undefined;
+      flushPendingEvents();
+    } else if (attempts >= 20) {
+      window.clearInterval(flushTimer);
+      flushTimer = undefined;
+      pendingEvents.length = 0;
+    }
+  }, 250);
 };
 
 export const trackEvent = (
@@ -52,7 +50,6 @@ export const trackEvent = (
     return;
   }
 
-  if (websiteId) {
-    pendingEvents.push({ eventName, params });
-  }
+  pendingEvents.push({ eventName, params });
+  scheduleFlush();
 };

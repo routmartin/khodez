@@ -29,5 +29,5 @@ Frontend requests to `/api/chat` are proxied to the API server during developmen
 ## Analytics
 
 The app supports optional Umami Cloud visitor and interaction analytics.
-The one-variable setup is documented in
+The tracking tag and verification details are documented in
 [ANALYTICS_SETUP.md](ANALYTICS_SETUP.md).
