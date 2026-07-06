@@ -480,7 +480,7 @@ export default defineComponent({
               {/* Actions (Theme Toggle & CV Download) */}
               <div class="flex items-center gap-2">
                 {/* Theme Toggle Button */}
-                <button
+                {/* <button
                   onClick={toggleTheme}
                   class="motion-soft-lift p-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 text-white transition-all cursor-pointer flex items-center justify-center w-8 h-8 focus:outline-none"
                   title={
@@ -494,12 +494,11 @@ export default defineComponent({
                   ) : (
                     <Moon class="w-4 h-4" />
                   )}
-                </button>
+                </button> */}
 
                 <a
-                  href=""
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="/assets/resume.pdf"
+                  download="Rout-Martin-Resume.pdf"
                   onClick={() =>
                     trackEvent("download_click", {
                       download_name: "resume_nav",
