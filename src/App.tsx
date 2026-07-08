@@ -497,7 +497,7 @@ export default defineComponent({
                 </button> */}
 
                 <a
-                  href="/assets/resume.pdf"
+                  href="/assets/Rout_Martin_Resume.pdf"
                   download="Rout-Martin-Resume.pdf"
                   onClick={() =>
                     trackEvent("download_click", {
