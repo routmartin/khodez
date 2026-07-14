@@ -6,7 +6,7 @@ import {
   ref,
   watch,
 } from "vue";
-import { Analytics } from "@vercel/analytics/vue";
+// Analytics is initialized in main.tsx using inject()
 import {
   Apple,
   ArrowRight,
@@ -403,7 +403,6 @@ export default defineComponent({
 
       return (
         <div class="min-h-screen bg-brand-bg text-gray-200 selection:bg-indigo-500/30 relative overflow-x-hidden">
-          <Analytics />
           {/* BACKGROUND GRAPHICS: Floating subtle radial background gradients to give "liquid space" depth */}
           <div class="motion-float-slow absolute top-10 left-1/4 h-[320px] w-[320px] rounded-full theme-blob theme-blob-one blur-[72px] pointer-events-none"></div>
           <div class="motion-float-slow motion-delay-2 absolute top-[40%] right-10 h-[360px] w-[360px] rounded-full theme-blob theme-blob-two blur-[82px] pointer-events-none"></div>
